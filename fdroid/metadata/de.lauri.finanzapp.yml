@@ -1,0 +1,49 @@
+Categories:
+  - Money
+License: MIT
+AuthorName: Lauju1909
+SourceCode: https://github.com/Lauju1909/BarrierefreieFinanzApp-Android
+IssueTracker: https://github.com/Lauju1909/BarrierefreieFinanzApp-Android/issues
+
+AutoName: Haushaltsbuch Barrierefrei
+Summary: Barrierefreies Haushaltsbuch mit TalkBack-Unterstützung und sicherem Offline-Tresor
+Description: |-
+  Haushaltsbuch Barrierefrei ist eine intuitive und sichere Finanz-App, entwickelt für
+  Menschen mit Sehbehinderung, Blindheit und alle, die eine klare barrierefreie Finanzverwaltung schätzen.
+
+  Features:
+  - Optimiert für Screenreader (TalkBack, NVDA/JAWS-kompatible Bedienmuster)
+  - Hoher Kontrast, anpassbare Schriftgrößen und OLED-Dark-Mode
+  - Flexible Abrechnungszeiträume (monatlich, wöchentlich, flexibel)
+  - Spartöpfe, Daueraufträge, Wunschlisten
+  - Lokaler, verschlüsselter Offline-Tresor ohne Cloud-Zwang
+  - Schutz per PIN und Biometrie (Fingerabdruck)
+
+RepoType: git
+Repo: https://github.com/Lauju1909/BarrierefreieFinanzApp-Android.git
+
+Builds:
+  - versionName: '6.2.0'
+    versionCode: 10
+    commit: v6.2.0
+    subdir: android
+    init:
+      - npm ci
+      - npx cap sync android
+    gradle:
+      - assembleRelease
+
+  - versionName: '6.8.2'
+    versionCode: 11
+    commit: v6.8.2
+    subdir: android
+    init:
+      - npm ci
+      - npx cap sync android
+    gradle:
+      - assembleRelease
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags
+CurrentVersion: '6.8.2'
+CurrentVersionCode: 11
