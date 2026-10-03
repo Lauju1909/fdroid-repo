@@ -46,6 +46,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y fdroidserver apksigner
 
+      - name: Patch Androguard for Modern Android Compatibility
+        run: |
+          sudo python scripts/patch_fdroid.py
+
       - name: Build F-Droid Repository & Web Portal
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
