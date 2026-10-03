@@ -4,5 +4,6 @@ repo_icon: "icon.png"
 repo_description: |-
   Offizielle barrierefreie Android-Apps von Lauju für blinde und sehbehinderte Menschen. Vollständig für TalkBack optimiert, 100% offline nutzbar, werbefrei und quelloffen (MIT-Lizenz).
 archive_older: 0
+android_home: "/usr/local/lib/android/sdk"
 keystore: "repo-keystore.p12"
 repo_keyalias: "fdroid"

@@ -193,13 +193,16 @@ def update_fdroid():
     cmd = ["fdroid", "update", "-c", "--create-metadata"]
     res = subprocess.run(cmd, cwd=FDROID_DIR, capture_output=True, text=True)
     print("FDROID STDOUT:\n", res.stdout)
-    if res.returncode != 0:
-        print("FDROID STDERR:\n", res.stderr)
-        # Even if fdroid returns non-zero due to optional tools, check if index exists
+    print("FDROID STDERR:\n", res.stderr)
     
     # Restore original config without password
     with open(config_file, "w", encoding="utf-8") as f:
         f.write(content)
+
+    index_v1 = REPO_DIR / "index-v1.json"
+    if not index_v1.exists():
+        raise RuntimeError("fdroid update failed to generate index-v1.json!")
+    print(f"fdroid update successful! Generated index size: {index_v1.stat().st_size} bytes")
 
 def generate_web_portal(app_results):
     print("\nGenerating static web portal...")

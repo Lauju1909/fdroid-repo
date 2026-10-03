@@ -32,8 +32,17 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install fdroidserver & apksigner
+      - name: Setup Android SDK Build Tools
         run: |
+          LATEST_BUILD_TOOLS=$(ls -d /usr/local/lib/android/sdk/build-tools/* | sort -V | tail -n 1)
+          echo "$LATEST_BUILD_TOOLS" >> $GITHUB_PATH
+          echo "/usr/local/lib/android/sdk/platform-tools" >> $GITHUB_PATH
+          echo "ANDROID_HOME=/usr/local/lib/android/sdk" >> $GITHUB_ENV
+          echo "Using Android Build Tools: $LATEST_BUILD_TOOLS"
+
+      - name: Install latest fdroidserver
+        run: |
+          sudo add-apt-repository -y ppa:fdroid/fdroidserver
           sudo apt-get update
           sudo apt-get install -y fdroidserver apksigner
 
