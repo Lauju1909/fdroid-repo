@@ -1,0 +1,20 @@
+# Sensitive keystores & credentials (NEVER commit to git!)
+*.keystore
+*.jks
+*.p12
+*.key
+repo-keystore.*
+
+# Python / Environment
+__pycache__/
+*.pyc
+.venv/
+env/
+
+# Build caches & temporary files
+tmp/
+repo/
+.fdroid/
+*.tmp
+.DS_Store
+Thumbs.db

@@ -1,0 +1,8 @@
+repo_url: "https://lauju1909.github.io/fdroid-repo/fdroid/repo"
+repo_name: "Laujus Barrierefreie Apps"
+repo_icon: "icon.png"
+repo_description: |-
+  Offizielle barrierefreie Android-Apps von Lauju für blinde und sehbehinderte Menschen. Vollständig für TalkBack optimiert, 100% offline nutzbar, werbefrei und quelloffen (MIT-Lizenz).
+archive_older: 0
+keystore: "repo-keystore.p12"
+repo_keyalias: "fdroid"
