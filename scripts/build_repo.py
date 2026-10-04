@@ -203,23 +203,6 @@ def update_fdroid():
     if not index_v1.exists():
         raise RuntimeError("fdroid update failed to generate index-v1.json!")
 
-    # Ensure suggestedVersionCode and suggestedVersionName match the actual latest package
-    try:
-        with open(index_v1, "r", encoding="utf-8") as f:
-            idx_data = json.load(f)
-        for app in idx_data.get("apps", []):
-            pkg_id = app.get("packageName")
-            pkgs = idx_data.get("packages", {}).get(pkg_id, [])
-            if pkgs:
-                best_pkg = max(pkgs, key=lambda x: int(x.get("versionCode", 0)))
-                app["suggestedVersionCode"] = str(best_pkg.get("versionCode"))
-                app["suggestedVersionName"] = str(best_pkg.get("versionName"))
-                print(f"Set suggested version for {pkg_id}: {app['suggestedVersionName']} ({app['suggestedVersionCode']})")
-        with open(index_v1, "w", encoding="utf-8") as f:
-            json.dump(idx_data, f, indent=2)
-    except Exception as e:
-        print(f"Warning: could not adjust suggestedVersion: {e}")
-
     print(f"fdroid update successful! Generated index size: {index_v1.stat().st_size} bytes")
 
 def generate_web_portal(app_results):

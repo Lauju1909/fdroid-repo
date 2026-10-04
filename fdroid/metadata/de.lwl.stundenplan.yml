@@ -1,12 +1,12 @@
+Name: Barrierefreies WebUntis
+AutoName: Barrierefreies WebUntis
+Summary: Der barrierefreie Stundenplan für WebUntis – optimiert für Schüler mit Sehbeeinträchtigung
 Categories:
   - Education
 License: MIT
 AuthorName: Lauju1909
 SourceCode: https://github.com/Lauju1909/BarrierefreierStundenplanLWL-Android
 IssueTracker: https://github.com/Lauju1909/BarrierefreierStundenplanLWL-Android/issues
-
-AutoName: Barrierefreies WebUntis
-Summary: Der barrierefreie Stundenplan für WebUntis – optimiert für Schüler mit Sehbeeinträchtigung
 Description: |-
   Barrierefreies WebUntis ermöglicht Schülern und Lehrkräften einen schnellen,
   barrierefreien Zugriff auf Stundenpläne, Vertretungen und Schulinformationen.
@@ -18,32 +18,3 @@ Description: |-
   - Vertretungsplananzeige mit Ausfällen und Änderungen
   - Offline-Pufferung für den schnellen Abruf auch bei schlechtem Netz
   - Barrierefreie Kontrastmodi
-
-RepoType: git
-Repo: https://github.com/Lauju1909/BarrierefreierStundenplanLWL-Android.git
-
-Builds:
-  - versionName: '1.9.14'
-    versionCode: 26
-    commit: v1.9.14
-    subdir: android
-    init:
-      - npm ci
-      - npx cap sync android
-    gradle:
-      - assembleRelease
-
-  - versionName: '1.9.26'
-    versionCode: 27
-    commit: v1.9.26
-    subdir: android
-    init:
-      - npm ci
-      - npx cap sync android
-    gradle:
-      - assembleRelease
-
-AutoUpdateMode: Version
-UpdateCheckMode: Tags
-CurrentVersion: '1.9.26'
-CurrentVersionCode: 27

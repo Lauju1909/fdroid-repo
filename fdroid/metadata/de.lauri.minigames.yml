@@ -1,39 +1,18 @@
+Name: Audio Mini Games
+AutoName: Audio Mini Games
+Summary: Über 60 barrierefreie Audio-Minispiele spielbar nach Gehör und Vibration
 Categories:
   - Games
 License: MIT
 AuthorName: Lauju1909
 SourceCode: https://github.com/Lauju1909/Mini_Game_Sammlung_Android
 IssueTracker: https://github.com/Lauju1909/Mini_Game_Sammlung_Android/issues
-
-AutoName: Audio Mini Games
-Summary: Over 60 accessible audio mini-games for blind and visually impaired players
 Description: |-
-  Audio Mini Games is a rich collection of accessible audio-based mini games
-  playable entirely through sound, spatial cues, and haptics without requiring visual feedback.
+  Audio Mini Games bietet über 60 barrierefreie Minispiele, die rein nach Gehör und haptischem Feedback
+  gespielt werden können.
 
   Features:
-  - Over 60 mini-games across Action, Logic, 3D Stereo Navigation, and Simulation
-  - 100% playable with TalkBack or built-in speech engine
-  - 3D spatial stereo sound design
-  - Haptic feedback support
-  - Local high scores and achievement tracking
-  - 100% free, no ads, no trackers, fully playable offline
-
-RepoType: git
-Repo: https://github.com/Lauju1909/Mini_Game_Sammlung_Android.git
-
-Builds:
-  - versionName: '1.0'
-    versionCode: 1
-    commit: v1.0.0
-    subdir: android
-    init:
-      - npm ci
-      - npx cap sync android
-    gradle:
-      - assembleRelease
-
-AutoUpdateMode: Version
-UpdateCheckMode: Tags
-CurrentVersion: '1.0'
-CurrentVersionCode: 1
+  - 3D-Binaural Audio für räumliche Wahrnehmung
+  - Haptische Vibrationen
+  - Zahlreiche Spielgenres: Arcade, Geschicklichkeit, Rhythmus und Logik
+  - Entwickelt für Menschen mit Sehbeeinträchtigung
