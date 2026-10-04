@@ -60,7 +60,7 @@ APPS = [
     },
     {
         "repo": "Lauju1909/BFW-Wirtschaftsenglisch-Android",
-        "name": "BFW Wirtschaftsenglisch",
+        "name": "BFW Vokabel-Verwaltung",
         "id": "de.lauri.bfwenglisch",
         "icon": "https://raw.githubusercontent.com/Lauju1909/BFW-Wirtschaftsenglisch-Android/main/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
         "desc": "Vokabel-Hub für Wirtschaftsenglisch BFW 1 & BFW 2 (VokabelStar & VokabelMeister)"
