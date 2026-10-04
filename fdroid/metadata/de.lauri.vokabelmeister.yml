@@ -1,0 +1,42 @@
+Categories:
+  - Education
+License: MIT
+AuthorName: Lauju1909
+SourceCode: https://github.com/Lauju1909/VokabelMeister-Android
+IssueTracker: https://github.com/Lauju1909/VokabelMeister-Android/issues
+
+AutoName: VokabelMeister
+Summary: Barrierefreier schriftlicher Vokabeltrainer mit Fehlertoleranz fuer Android
+Description: |-
+  VokabelMeister ist ein rein schriftlicher Vokabeltrainer fuer Android,
+  speziell konzipiert fuer effektives aktives Schreiben und Wiederholen.
+
+  Features:
+  - 100% barrierefrei und fuer Screenreader (TalkBack) optimiert
+  - Reine schriftliche Abfrage zum gezielten Einpraegen der Rechtschreibung
+  - Damerau-Levenshtein-Tippfehlertoleranz (verzeiht Dreher und kleine Tippfehler)
+  - Intelligente Klammer- und Schraegstrich-Aufloesung fuer Synonyme und Kurzformen
+  - Gewichtetes Kartensystem fuer haeufigere Wiederholung schwieriger Begriffe
+  - Ueber 1.700 vorinstallierte Vokabeln (Sprachen, Fachwoerter, Formeln, Befehle)
+  - Vollstaendiger Datei-Import (.docx, .xlsx, .csv, .txt, .json)
+  - Text-to-Speech (TTS) Ausspracheunterstuetzung
+  - 100% Offline & Privat – keinerlei Tracking oder Datensammlung
+
+RepoType: git
+Repo: https://github.com/Lauju1909/VokabelMeister-Android.git
+
+Builds:
+  - versionName: '1.0.0'
+    versionCode: 1
+    commit: v1.0.0
+    subdir: android
+    init:
+      - npm ci
+      - npx cap sync android
+    gradle:
+      - assembleRelease
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags
+CurrentVersion: '1.0.0'
+CurrentVersionCode: 1

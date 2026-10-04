@@ -50,6 +50,13 @@ APPS = [
         "id": "de.lauri.vokabelstar",
         "icon": "https://raw.githubusercontent.com/Lauju1909/VokabelStar-Android/main/fastlane/metadata/android/de-DE/images/icon.png",
         "desc": "Barrierefreier Vokabeltrainer wie Duolingo – speziell optimiert für TalkBack & Screenreader"
+    },
+    {
+        "repo": "Lauju1909/VokabelMeister-Android",
+        "name": "VokabelMeister",
+        "id": "de.lauri.vokabelmeister",
+        "icon": "https://raw.githubusercontent.com/Lauju1909/VokabelMeister-Android/main/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+        "desc": "Barrierefreier schriftlicher Vokabeltrainer mit Damerau-Levenshtein-Toleranz und TalkBack-Unterstützung"
     }
 ]
 
