@@ -1,0 +1,38 @@
+Categories:
+  - Education
+License: MIT
+AuthorName: Lauju1909
+SourceCode: https://github.com/Lauju1909/BFW-Wirtschaftsenglisch-Android
+IssueTracker: https://github.com/Lauju1909/BFW-Wirtschaftsenglisch-Android/issues
+
+AutoName: BFW Wirtschaftsenglisch
+Summary: Vokabel-Hub fuer Wirtschaftsenglisch BFW 1 & BFW 2
+Description: |-
+  BFW Wirtschaftsenglisch ist ein barrierefreier Vokabel-Hub fuer die
+  Berufsfachschule Wirtschaft.
+
+  Features:
+  - 100% barrierefrei und fuer TalkBack optimiert
+  - Themen aus BFW 1 & BFW 2 (Berufsbilder, Kaufhaus, Abteilungen, Bewerbung, Handelskorrespondenz)
+  - Vokabel-Export und 1-Klick-Download fuer VokabelStar und VokabelMeister
+  - Vokabeln einzeln vorhoeren und lernen
+  - 100% offline und lokal nutzbar
+
+RepoType: git
+Repo: https://github.com/Lauju1909/BFW-Wirtschaftsenglisch-Android.git
+
+Builds:
+  - versionName: '1.0.0'
+    versionCode: 1
+    commit: v1.0.0
+    subdir: android
+    init:
+      - npm ci
+      - npx cap sync android
+    gradle:
+      - assembleRelease
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags
+CurrentVersion: '1.0.0'
+CurrentVersionCode: 1
