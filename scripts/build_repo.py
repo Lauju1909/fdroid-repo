@@ -43,6 +43,13 @@ APPS = [
         "id": "com.talkback.translator",
         "icon": "https://raw.githubusercontent.com/Lauju1909/TalkBack-Deutsch-Uebersetzer-Android/main/fastlane/metadata/android/de-DE/images/icon.png",
         "desc": "Barrierefreie Begleit-App für TalkBack – übersetzt Bildschirminhalte live ins Deutsche"
+    },
+    {
+        "repo": "Lauju1909/VokabelStar-Android",
+        "name": "VokabelStar",
+        "id": "de.lauri.vokabelstar",
+        "icon": "https://raw.githubusercontent.com/Lauju1909/VokabelStar-Android/main/fastlane/metadata/android/de-DE/images/icon.png",
+        "desc": "Barrierefreier Vokabeltrainer wie Duolingo – speziell optimiert für TalkBack & Screenreader"
     }
 ]
 
