@@ -64,6 +64,20 @@ APPS = [
         "id": "de.lauri.bfwenglisch",
         "icon": "https://raw.githubusercontent.com/Lauju1909/BFW-Wirtschaftsenglisch-Android/main/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
         "desc": "Vokabel-Hub für Wirtschaftsenglisch BFW 1 & BFW 2 (VokabelStar & VokabelMeister)"
+    },
+    {
+        "repo": "Lauju1909/Lernplatform-Android",
+        "name": "Lernplattform Android",
+        "id": "de.lauri.lernplatform",
+        "icon": "https://raw.githubusercontent.com/Lauju1909/Lernplatform-Android/main/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+        "desc": "Barrierefreie Lern- und Wissensplattform für Schule & Alltag (TalkBack-optimiert)"
+    },
+    {
+        "repo": "Lauju1909/BarrierefreierAppStore-Android",
+        "name": "Lauju Store",
+        "id": "de.lauri.appstore",
+        "icon": "https://raw.githubusercontent.com/Lauju1909/BarrierefreierAppStore-Android/main/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+        "desc": "Barrierefreier App Store (F-Droid & Neo Store Client) für TalkBack und offene Paketquellen"
     }
 ]
 

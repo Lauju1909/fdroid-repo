@@ -37,6 +37,8 @@ Tippe auf folgenden Link, um das Repository direkt in F-Droid oder Neo Store ein
 | **Barrierefreies WebUntis** | `de.lwl.stundenplan` | Barrierefreier Stundenplan für Schüler am LWL-Berufskolleg Soest |
 | **Audio Mini Games** | `de.lauri.minigames` | Über 60 barrierefreie Minispiele, spielbar nach Gehör und Haptik |
 | **TalkBack Deutsch-Übersetzer** | `com.talkback.translator` | Barrierefreie Begleit-App, die englische Apps live auf Deutsch vorliest |
+| **Lernplattform Android** | `de.lauri.lernplatform` | Barrierefreie Lern- und Wissensplattform für Schule & Alltag |
+| **Lauju Store** | `de.lauri.appstore` | Barrierefreier App Store (F-Droid & Neo Store Client) |
 
 ---
 
