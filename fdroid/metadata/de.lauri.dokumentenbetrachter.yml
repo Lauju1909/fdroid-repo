@@ -1,0 +1,29 @@
+Name: Dokumenten-Betrachter Barrierefrei
+AutoName: Dokumenten-Betrachter Barrierefrei
+Summary: Barrierefreier Dokumenten-Betrachter für LibreOffice (ODT, ODS), Word (DOCX), PDF und Text mit TalkBack-Fokus
+Categories:
+  - Office
+  - Accessibility
+License: MIT
+AuthorName: Lauju1909
+SourceCode: https://github.com/Lauju1909/BarrierefreierDokumentenBetrachter-Android
+IssueTracker: https://github.com/Lauju1909/BarrierefreierDokumentenBetrachter-Android/issues
+Description: |-
+  Dokumenten-Betrachter Barrierefrei ist eine intuitive, schnelle und 100% offline-fähige
+  Office-Betrachter-App für Android, speziell entwickelt für Menschen mit Blindheit und Sehbehinderung.
+
+  Im Gegensatz zu traditionellen Office-Viewern, die Dokumente oft als unzugängliche Grafik-Kacheln
+  darstellen, wandelt diese App Dokumente in echte semantische Textstrukturen um.
+
+  Features:
+  - Vollständige TalkBack- und Screenreader-Unterstützung (WCAG 2.2 AAA konform)
+  - Unterstützt LibreOffice Writer (.odt) und LibreOffice Calc (.ods)
+  - Unterstützt Microsoft Word (.docx, .doc) und Excel (.xlsx)
+  - Unterstützt Adobe PDF mit semantischer Textextraktion
+  - Unterstützt Textdateien und Markdown (.txt, .md, .csv)
+  - Integrierte Vorlesefunktion (Text-to-Speech) mit Satznavigation und visueller Hervorhebung
+  - 4 Kontrastmodi: Hell, OLED-Schwarz, Gelb auf Schwarz (Optimal für Sehbehinderte), Sepia
+  - Stufenlose Schriftgrößen-Skalierung (14px bis 36px) und Zeilenabstand-Anpassung
+  - Inhaltsverzeichnis mit Direkt-Sprung zu allen Überschriften
+  - Volltextsuche im Dokument mit Trefferzähler
+  - 100% Offline & Datenschutz: Keine Cloud, alle Dokumente verbleiben sicher auf dem Gerät
