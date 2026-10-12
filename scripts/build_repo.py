@@ -72,6 +72,13 @@ APPS = [
         "id": "de.lauri.appstore",
         "icon": "https://raw.githubusercontent.com/Lauju1909/BarrierefreierAppStore-Android/main/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
         "desc": "Barrierefreier App Store (F-Droid & Neo Store Client) für TalkBack und offene Paketquellen"
+    },
+    {
+        "repo": "Lauju1909/BarrierefreierDokumentenBetrachter-Android",
+        "name": "Dokumenten-Betrachter Barrierefrei",
+        "id": "de.lauri.dokumentenbetrachter",
+        "icon": "https://raw.githubusercontent.com/Lauju1909/BarrierefreierDokumentenBetrachter-Android/main/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+        "desc": "Barrierefreier Dokumenten-Betrachter für LibreOffice (ODT, ODS), Word (DOCX), PDF und Text mit TalkBack-Fokus"
     }
 ]
 
