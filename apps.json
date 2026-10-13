@@ -98,11 +98,13 @@
   {
     "repo": "Lauju1909/BarrierefreierAppStore-Android",
     "name": "Lauju Store",
+    "author": "Laurin Schneider",
     "id": "de.lauri.appstore",
+    "category": "tools",
     "icon": "https://raw.githubusercontent.com/Lauju1909/BarrierefreierAppStore-Android/main/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
     "desc": "Barrierefreier App Store (F-Droid & Neo Store Client) für TalkBack und offene Paketquellen",
     "status": "approved",
-    "paymentType": "donation",
+    "paymentType": "free",
     "price": "",
     "paymentUrl": "https://ko-fi.com/lauju1909",
     "isBeta": false
