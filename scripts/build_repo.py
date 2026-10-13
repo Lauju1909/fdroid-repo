@@ -166,6 +166,7 @@ def process_apps(apps):
         app_results.append({
             "name": app["name"],
             "id": app["id"],
+            "author": app.get("author", "Laurin Schneider"),
             "version": tag,
             "desc": app["desc"],
             "apk_file": apk_filename,
@@ -228,7 +229,7 @@ def generate_web_portal(app_results, all_apps):
                 <img src="fdroid/repo/icons/{app['id']}.png" alt="App Icon für {app['name']}" class="app-icon" width="64" height="64" onerror="this.src='fdroid/icon.png'">
                 <div>
                     <h3 class="app-title">{app['name']}</h3>
-                    <span class="app-version">Version {app['version']} ({app['apk_size']})</span>
+                    <span class="app-version">Von {app.get('author', 'Laurin Schneider')} · Version {app['version']} ({app['apk_size']})</span>
                     <div style="margin-top: 6px; display: flex; gap: 6px; flex-wrap: wrap;">
                         {beta_badge}
                         {payment_badge}
