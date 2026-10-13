@@ -3,10 +3,10 @@
     "repo": "Lauju1909/BarrierefreieFinanzApp-Android",
     "name": "Haushaltsbuch Barrierefrei",
     "id": "de.lauri.finanzapp",
-    "icon": "https://raw.githubusercontent.com/Lauju1909/BarrierefreieFinanzApp-Android/main/fastlane/metadata/android/de-DE/images/icon.png",
+    "icon": "https://raw.githubusercontent.com/Lauju1909/BarrierefreieFinanzApp-Android/main/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
     "desc": "Barrierefreies Haushaltsbuch mit TalkBack-Unterstützung und sicherem Offline-Tresor",
     "status": "approved",
-    "paymentType": "donation",
+    "paymentType": "free",
     "price": "",
     "paymentUrl": "https://ko-fi.com/lauju1909",
     "isBeta": false
