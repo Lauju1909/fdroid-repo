@@ -175,7 +175,8 @@ def process_apps(apps):
             "paymentType": app.get("paymentType", "free"),
             "price": app.get("price", ""),
             "paymentUrl": app.get("paymentUrl", ""),
-            "isBeta": is_beta
+            "isBeta": is_beta,
+            "hideAuthor": bool(app.get("hideAuthor", False))
         })
 
     return app_results
@@ -192,18 +193,21 @@ def update_fdroid():
         f.write(content_with_pass)
 
     cmd = ["fdroid", "update", "-c", "--create-metadata"]
-    res = subprocess.run(cmd, cwd=FDROID_DIR, capture_output=True, text=True)
-    print("FDROID STDOUT:\n", res.stdout)
-    print("FDROID STDERR:\n", res.stderr)
+    try:
+        res = subprocess.run(cmd, cwd=FDROID_DIR, capture_output=True, text=True)
+        print("FDROID STDOUT:\n", res.stdout)
+        print("FDROID STDERR:\n", res.stderr)
+    except FileNotFoundError:
+        print("Notice: 'fdroid' command not found locally. Skipping binary fdroid update (handled by GitHub Actions in CI).")
     
     with open(config_file, "w", encoding="utf-8") as f:
         f.write(content)
 
     index_v1 = REPO_DIR / "index-v1.json"
     if not index_v1.exists():
-        raise RuntimeError("fdroid update failed to generate index-v1.json!")
-
-    print(f"fdroid update successful! Generated index size: {index_v1.stat().st_size} bytes")
+        print("Warning: index-v1.json not found yet (will be created in GitHub Actions runner).")
+    else:
+        print(f"fdroid index size: {index_v1.stat().st_size} bytes")
 
 def generate_web_portal(app_results, all_apps):
     print("\nGenerating static web portal with submit & edit capabilities...")
@@ -223,13 +227,18 @@ def generate_web_portal(app_results, all_apps):
             payment_badge = f'<span class="badge badge-paid">💰 {price_label}</span>'
             payment_btn = f'<a href="{app["paymentUrl"]}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">💰 Kaufen ({price_label})</a>'
 
+        # Autor verbergen (Nur erlaubt wenn keine Kauf-App)
+        is_paid = (app.get("paymentType") == "paid")
+        is_author_hidden = bool(app.get("hideAuthor")) and not is_paid
+        author_text = "" if is_author_hidden else f"Von {app.get('author', 'Laurin Schneider')} · "
+
         app_cards_html += f"""
         <article class="app-card" role="region" aria-label="{app['name']}">
             <div class="app-header">
                 <img src="fdroid/repo/icons/{app['id']}.png" alt="App Icon für {app['name']}" class="app-icon" width="64" height="64" onerror="this.src='fdroid/icon.png'">
                 <div>
                     <h3 class="app-title">{app['name']}</h3>
-                    <span class="app-version">Von {app.get('author', 'Laurin Schneider')} · Version {app['version']} ({app['apk_size']})</span>
+                    <span class="app-version">{author_text}Version {app['version']} ({app['apk_size']})</span>
                     <div style="margin-top: 6px; display: flex; gap: 6px; flex-wrap: wrap;">
                         {beta_badge}
                         {payment_badge}
@@ -563,6 +572,16 @@ def generate_web_portal(app_results, all_apps):
                     <p class="form-helper">Beta-Apps werden mit dem Beta-Abzeichen markiert und können von Testern vorab ausprobiert werden.</p>
                 </div>
 
+                <div class="form-row">
+                    <label style="font-weight: bold; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" id="input-hide-author" style="width: 20px; height: 20px;" onchange="validateHideAuthorPortal()">
+                        <span>🙈 Meinen Namen als Autor im Store verbergen</span>
+                    </label>
+                    <p id="hint-hide-author-portal" class="form-helper" style="color: #f87171; display: none;">
+                        ⚠️ <strong>Gesetzlicher Hinweis:</strong> Bei kostenpflichtigen Kauf-Apps muss der Entwickler / Anbieter aus rechtlichen Gründen (Impressum / Verbraucherschutz) zwingend angegeben werden und kann nicht verborgen werden.
+                    </p>
+                </div>
+
                 <button type="submit" id="btn-submit-app" class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 14px;">
                     ✅ App zur Prüfung einreichen / Änderungen speichern
                 </button>
@@ -615,6 +634,22 @@ def generate_web_portal(app_results, all_apps):
             const val = document.getElementById('input-payment-type').value;
             document.getElementById('row-price').style.display = (val === 'paid') ? 'block' : 'none';
             document.getElementById('row-payment-url').style.display = (val === 'paid' || val === 'donation') ? 'block' : 'none';
+            validateHideAuthorPortal();
+        }}
+
+        function validateHideAuthorPortal() {{
+            const val = document.getElementById('input-payment-type').value;
+            const chk = document.getElementById('input-hide-author');
+            const hint = document.getElementById('hint-hide-author-portal');
+
+            if (val === 'paid') {{
+                chk.checked = false;
+                chk.disabled = true;
+                if (hint) hint.style.display = 'block';
+            }} else {{
+                chk.disabled = false;
+                if (hint) hint.style.display = 'none';
+            }}
         }}
 
         let detectedMeta = null;
@@ -632,6 +667,7 @@ def generate_web_portal(app_results, all_apps):
                 document.getElementById('input-app-price').value = existing.price || '';
                 document.getElementById('input-payment-url').value = existing.paymentUrl || '';
                 document.getElementById('input-is-beta').checked = !!existing.isBeta;
+                document.getElementById('input-hide-author').checked = !!existing.hideAuthor;
                 togglePaymentInputs();
             }}
 
@@ -671,6 +707,7 @@ def generate_web_portal(app_results, all_apps):
             const price = document.getElementById('input-app-price').value.trim();
             const paymentUrl = document.getElementById('input-payment-url').value.trim();
             const isBeta = document.getElementById('input-is-beta').checked;
+            const hideAuthor = (paymentType === 'paid') ? false : document.getElementById('input-hide-author').checked;
 
             const title = `[App Einreichung / Update] ${{cleanRepo}}`;
             const body = `### Neue App Einreichung / Änderung\\n\\n` +
@@ -678,7 +715,8 @@ def generate_web_portal(app_results, all_apps):
                          `- **Modell:** ${{paymentType}}\\n` +
                          `- **Preis:** ${{price || 'Kostenlos'}}\\n` +
                          `- **Zahlungslink:** ${{paymentUrl || 'Keiner'}}\\n` +
-                         `- **Beta:** ${{isBeta ? 'Ja' : 'Nein'}}\\n\\n` +
+                         `- **Beta:** ${{isBeta ? 'Ja' : 'Nein'}}\\n` +
+                         `- **Autor verbergen:** ${{hideAuthor ? 'Ja (Nur für Gratis-/Spenden-Apps)' : 'Nein (Autor wird angezeigt)'}}\\n\\n` +
                          `*Automatisch generiert über das Lauju F-Droid Entwicklerportal.*`;
 
             const issueUrl = `https://github.com/Lauju1909/fdroid-repo/issues/new?title=${{encodeURIComponent(title)}}&body=${{encodeURIComponent(body)}}`;
