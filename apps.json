@@ -2,6 +2,7 @@
   {
     "repo": "Lauju1909/BarrierefreieFinanzApp-Android",
     "name": "Haushaltsbuch Barrierefrei",
+    "author": "Lauju1909",
     "id": "de.lauri.finanzapp",
     "icon": "https://raw.githubusercontent.com/Lauju1909/BarrierefreieFinanzApp-Android/main/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
     "desc": "Barrierefreies Haushaltsbuch mit TalkBack-Unterstützung und sicherem Offline-Tresor",
@@ -9,11 +10,13 @@
     "paymentType": "free",
     "price": "",
     "paymentUrl": "https://ko-fi.com/lauju1909",
-    "isBeta": false
+    "isBeta": false,
+    "hideAuthor": false
   },
   {
     "repo": "Lauju1909/Audio-Studio-Tycoon-Android",
     "name": "Audio Studio Tycoon",
+    "author": "Lauju1909",
     "id": "de.lauri.audiostudiotycoon",
     "icon": "https://raw.githubusercontent.com/Lauju1909/Audio-Studio-Tycoon-Android/main/fastlane/metadata/android/de-DE/images/icon.png",
     "desc": "Tiefe Spieleentwickler-Simulation für blinde und sehbehinderte Spieler (TalkBack-optimiert)",
@@ -21,11 +24,13 @@
     "paymentType": "free",
     "price": "",
     "paymentUrl": "",
-    "isBeta": false
+    "isBeta": false,
+    "hideAuthor": false
   },
   {
     "repo": "Lauju1909/BarrierefreierStundenplanLWL-Android",
     "name": "Barrierefreies WebUntis",
+    "author": "Lauju1909",
     "id": "de.lwl.stundenplan",
     "icon": "https://raw.githubusercontent.com/Lauju1909/BarrierefreierStundenplanLWL-Android/main/fastlane/metadata/android/de-DE/images/icon.png",
     "desc": "Barrierefreier Stundenplan für WebUntis am LWL-Berufskolleg Soest",
@@ -33,11 +38,13 @@
     "paymentType": "free",
     "price": "",
     "paymentUrl": "",
-    "isBeta": false
+    "isBeta": false,
+    "hideAuthor": false
   },
   {
     "repo": "Lauju1909/Mini_Game_Sammlung_Android",
     "name": "Audio Mini Games",
+    "author": "Lauju1909",
     "id": "de.lauri.minigames",
     "icon": "https://raw.githubusercontent.com/Lauju1909/Mini_Game_Sammlung_Android/main/fastlane/metadata/android/de-DE/images/icon.png",
     "desc": "Über 60 barrierefreie Audio-Minispiele spielbar nach Gehör und Vibration",
@@ -45,12 +52,13 @@
     "paymentType": "free",
     "price": "",
     "paymentUrl": "",
-    "isBeta": false
+    "isBeta": false,
+    "hideAuthor": false
   },
   {
     "repo": "Lauju1909/TalkBack-Deutsch-Uebersetzer-Android",
     "name": "TalkBack Deutsch-Übersetzer",
-    "author": "Laurin Schneider",
+    "author": "Lauju1909",
     "id": "com.talkback.translator",
     "category": "tools",
     "icon": "https://raw.githubusercontent.com/Lauju1909/TalkBack-Deutsch-Uebersetzer-Android/main/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
@@ -65,6 +73,7 @@
   {
     "repo": "Lauju1909/VokabelStar-Android",
     "name": "VokabelStar",
+    "author": "Lauju1909",
     "id": "de.lauri.vokabelstar",
     "icon": "https://raw.githubusercontent.com/Lauju1909/VokabelStar-Android/main/fastlane/metadata/android/de-DE/images/icon.png",
     "desc": "Barrierefreier Vokabeltrainer wie Duolingo – speziell optimiert für TalkBack & Screenreader",
@@ -72,11 +81,13 @@
     "paymentType": "free",
     "price": "",
     "paymentUrl": "",
-    "isBeta": false
+    "isBeta": false,
+    "hideAuthor": false
   },
   {
     "repo": "Lauju1909/BFW-Wirtschaftsenglisch-Android",
     "name": "BFW Vokabel-Verwaltung",
+    "author": "Lauju1909",
     "id": "de.lauri.bfwenglisch",
     "icon": "https://raw.githubusercontent.com/Lauju1909/BFW-Wirtschaftsenglisch-Android/main/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
     "desc": "Vokabel-Hub für Wirtschaftsenglisch BFW 1 & BFW 2 (VokabelStar & VokabelMeister)",
@@ -84,11 +95,13 @@
     "paymentType": "free",
     "price": "",
     "paymentUrl": "",
-    "isBeta": false
+    "isBeta": false,
+    "hideAuthor": false
   },
   {
     "repo": "Lauju1909/Lernplatform-Android",
     "name": "Lernplattform Android",
+    "author": "Lauju1909",
     "id": "de.lauri.lernplatform",
     "icon": "https://raw.githubusercontent.com/Lauju1909/Lernplatform-Android/main/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
     "desc": "Barrierefreie Lern- und Wissensplattform für Schule & Alltag (TalkBack-optimiert)",
@@ -96,12 +109,13 @@
     "paymentType": "free",
     "price": "",
     "paymentUrl": "",
-    "isBeta": false
+    "isBeta": false,
+    "hideAuthor": false
   },
   {
     "repo": "Lauju1909/BarrierefreierAppStore-Android",
     "name": "Lauju Store",
-    "author": "Laurin Schneider",
+    "author": "Lauju1909",
     "id": "de.lauri.appstore",
     "category": "tools",
     "icon": "https://raw.githubusercontent.com/Lauju1909/BarrierefreierAppStore-Android/main/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
@@ -110,11 +124,13 @@
     "paymentType": "free",
     "price": "",
     "paymentUrl": "https://ko-fi.com/lauju1909",
-    "isBeta": false
+    "isBeta": false,
+    "hideAuthor": false
   },
   {
     "repo": "Lauju1909/BarrierefreierDokumentenBetrachter-Android",
     "name": "Dokumenten-Betrachter Barrierefrei",
+    "author": "Lauju1909",
     "id": "de.lauri.dokumentenbetrachter",
     "icon": "https://raw.githubusercontent.com/Lauju1909/BarrierefreierDokumentenBetrachter-Android/main/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
     "desc": "Barrierefreier Dokumenten-Betrachter für LibreOffice (ODT, ODS), Word (DOCX), PDF und Text mit TalkBack-Fokus",
@@ -122,6 +138,7 @@
     "paymentType": "free",
     "price": "",
     "paymentUrl": "",
-    "isBeta": false
+    "isBeta": false,
+    "hideAuthor": false
   }
 ]
