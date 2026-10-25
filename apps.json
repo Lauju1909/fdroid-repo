@@ -14,17 +14,18 @@
     "hideAuthor": false
   },
   {
-    "repo": "Lauju1909/BarrierefreierStundenplanLWL-Android",
-    "name": "Barrierefreies WebUntis",
+    "repo": "Lauju1909/Audio-Studio-Tycoon-Android",
+    "name": "Audio Studio Tycoon",
     "author": "Lauju1909",
-    "id": "de.lwl.stundenplan",
-    "icon": "https://raw.githubusercontent.com/Lauju1909/BarrierefreierStundenplanLWL-Android/main/fastlane/metadata/android/de-DE/images/icon.png",
-    "desc": "Barrierefreier Stundenplan für WebUntis am LWL-Berufskolleg Soest",
+    "id": "de.lauri.audiostudiotycoon",
+    "category": "tools",
+    "icon": "https://raw.githubusercontent.com/Lauju1909/Audio-Studio-Tycoon-Android/main/fastlane/metadata/android/de-DE/images/icon.png",
+    "desc": "Tiefe Spieleentwickler-Simulation für blinde und sehbehinderte Spieler (TalkBack-optimiert)",
     "status": "approved",
     "paymentType": "free",
     "price": "",
     "paymentUrl": "",
-    "isBeta": false,
+    "isBeta": true,
     "hideAuthor": false
   },
   {
