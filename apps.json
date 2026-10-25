@@ -43,21 +43,6 @@
     "hideAuthor": false
   },
   {
-    "repo": "Lauju1909/TalkBack-Deutsch-Uebersetzer-Android",
-    "name": "TalkBack Deutsch-Übersetzer",
-    "author": "Lauju1909",
-    "id": "com.talkback.translator",
-    "category": "tools",
-    "icon": "https://raw.githubusercontent.com/Lauju1909/TalkBack-Deutsch-Uebersetzer-Android/main/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
-    "desc": "Barrierefreie Begleit-App für TalkBack – übersetzt Bildschirminhalte live ins Deutsche",
-    "status": "approved",
-    "paymentType": "free",
-    "price": "",
-    "paymentUrl": "https://ko-fi.com/lauju1909",
-    "isBeta": true,
-    "hideAuthor": false
-  },
-  {
     "repo": "Lauju1909/VokabelStar-Android",
     "name": "VokabelStar",
     "author": "Lauju1909",
