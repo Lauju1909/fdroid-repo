@@ -98,6 +98,9 @@ def sign_apk(input_path, output_path):
         "--ks-pass", f"pass:{password}",
         "--key-pass", f"pass:{password}",
         "--ks-key-alias", alias,
+        "--v1-signing-enabled", "true",
+        "--v2-signing-enabled", "true",
+        "--v3-signing-enabled", "true",
         "--out", str(output_path),
         str(input_path)
     ]
@@ -139,18 +142,36 @@ def process_apps(apps):
         tag = rel.get("tag_name", "unknown")
         assets = rel.get("assets", [])
         
+        apk_assets = [a for a in assets if a["name"].lower().endswith(".apk")]
+        non_debug_apks = [
+            a for a in apk_assets
+            if "debug" not in a["name"].lower() and "unsigned" not in a["name"].lower()
+        ]
+        candidates = non_debug_apks if non_debug_apks else [
+            a for a in apk_assets if "debug" not in a["name"].lower()
+        ]
+        if not candidates:
+            candidates = apk_assets
+
         selected_asset = None
-        for a in assets:
+        for a in candidates:
             name = a["name"].lower()
-            if name.endswith(".apk"):
-                if "release" in name and not selected_asset:
-                    selected_asset = a
-                elif not selected_asset:
-                    selected_asset = a
+            if "release" in name or "store" in name:
+                selected_asset = a
+                break
+        if not selected_asset and candidates:
+            selected_asset = candidates[0]
 
         if not selected_asset:
             print(f"No APK found in release {tag} for {app['name']}")
             continue
+
+        # Remove older or debuggable APKs for this package id
+        for old_apk in REPO_DIR.glob(f"{app['id']}_*.apk"):
+            try:
+                old_apk.unlink()
+            except Exception:
+                pass
 
         apk_filename = f"{app['id']}_{tag.lstrip('v')}.apk"
         tmp_apk = ROOT_DIR / "tmp" / selected_asset["name"]

@@ -33,13 +33,14 @@
     "name": "Audio Mini Games",
     "author": "Lauju1909",
     "id": "de.lauri.minigames",
+    "category": "tools",
     "icon": "https://raw.githubusercontent.com/Lauju1909/Mini_Game_Sammlung_Android/main/fastlane/metadata/android/de-DE/images/icon.png",
     "desc": "75 barrierefreie Audio-Minispiele mit 5-Tasten-Touchpad und 3D-Kopfhörer-Ortung (Action, Logik, Navigation, Wissen, Simulation)",
     "status": "approved",
     "paymentType": "free",
     "price": "",
     "paymentUrl": "",
-    "isBeta": false,
+    "isBeta": true,
     "hideAuthor": false
   },
   {
@@ -47,13 +48,14 @@
     "name": "VokabelStar",
     "author": "Lauju1909",
     "id": "de.lauri.vokabelstar",
+    "category": "tools",
     "icon": "https://raw.githubusercontent.com/Lauju1909/VokabelStar-Android/main/fastlane/metadata/android/de-DE/images/icon.png",
     "desc": "Barrierefreier Vokabeltrainer wie Duolingo – speziell optimiert für TalkBack & Screenreader",
     "status": "approved",
     "paymentType": "free",
     "price": "",
     "paymentUrl": "",
-    "isBeta": false,
+    "isBeta": true,
     "hideAuthor": false
   },
   {
@@ -61,13 +63,14 @@
     "name": "BFW Vokabel-Verwaltung",
     "author": "Lauju1909",
     "id": "de.lauri.bfwenglisch",
+    "category": "tools",
     "icon": "https://raw.githubusercontent.com/Lauju1909/BFW-Wirtschaftsenglisch-Android/main/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
     "desc": "Vokabel-Hub für Wirtschaftsenglisch BFW 1 & BFW 2 (VokabelStar & VokabelMeister)",
     "status": "approved",
     "paymentType": "free",
     "price": "",
     "paymentUrl": "",
-    "isBeta": false,
+    "isBeta": true,
     "hideAuthor": false
   },
   {
@@ -119,13 +122,14 @@
     "name": "Dokumenten-Betrachter Barrierefrei",
     "author": "Lauju1909",
     "id": "de.lauri.dokumentenbetrachter",
+    "category": "tools",
     "icon": "https://raw.githubusercontent.com/Lauju1909/BarrierefreierDokumentenBetrachter-Android/main/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
     "desc": "Barrierefreier Dokumenten-Betrachter für LibreOffice (ODT, ODS), Word (DOCX), PDF und Text mit TalkBack-Fokus",
     "status": "approved",
     "paymentType": "free",
     "price": "",
     "paymentUrl": "",
-    "isBeta": false,
+    "isBeta": true,
     "hideAuthor": false
   }
 ]
