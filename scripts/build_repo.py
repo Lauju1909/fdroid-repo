@@ -798,9 +798,14 @@ def generate_web_portal(app_results, all_apps):
 
     # Copy apps.json into _site
     shutil.copyfile(APPS_FILE, SITE_DIR / "apps.json")
+    (SITE_DIR / ".nojekyll").write_text("", encoding="utf-8")
 
-    # Copy fdroid dir into _site/fdroid
-    shutil.copytree(FDROID_DIR, SITE_DIR / "fdroid", dirs_exist_ok=True)
+    # Copy only public fdroid/repo and icon.png into _site/fdroid (never copy keystores or tmp!)
+    site_fdroid = SITE_DIR / "fdroid"
+    site_fdroid.mkdir(parents=True, exist_ok=True)
+    if (FDROID_DIR / "icon.png").exists():
+        shutil.copyfile(FDROID_DIR / "icon.png", site_fdroid / "icon.png")
+    shutil.copytree(REPO_DIR, site_fdroid / "repo", symlinks=False, dirs_exist_ok=True)
     print("Web portal and repo successfully staged in _site/")
 
 def main():
