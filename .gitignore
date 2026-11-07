@@ -12,6 +12,7 @@ __pycache__/
 env/
 
 # Build caches & temporary files
+/target/
 tmp/
 repo/
 .fdroid/

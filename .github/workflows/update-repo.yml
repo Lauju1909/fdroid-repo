@@ -20,17 +20,18 @@ concurrency:
 
 jobs:
   build:
-    name: Build & Deploy F-Droid Catalog
+    name: Build & Deploy F-Droid Catalog (Rust)
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
+      - name: Install Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust Cargo Cache
+        uses: Swatinem/rust-cache@v2
 
       - name: Setup Android SDK Build Tools
         run: |
@@ -40,17 +41,16 @@ jobs:
           echo "ANDROID_HOME=/usr/local/lib/android/sdk" >> $GITHUB_ENV
           echo "Using Android Build Tools: $LATEST_BUILD_TOOLS"
 
-      - name: Install latest fdroidserver
+      - name: Install latest fdroidserver & OpenSSL dev
         run: |
           sudo add-apt-repository -y ppa:fdroid/fdroidserver
           sudo apt-get update
-          sudo apt-get install -y fdroidserver apksigner
+          sudo apt-get install -y fdroidserver apksigner pkg-config libssl-dev
 
-      - name: Patch Androguard for Modern Android Compatibility
-        run: |
-          sudo python scripts/patch_fdroid.py
+      - name: Compile Rust Repository Builder
+        run: cargo build --release
 
-      - name: Build F-Droid Repository & Web Portal
+      - name: Patch Androguard & Build F-Droid Repository in Rust
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FDROID_REPO_KEYSTORE_BASE64: ${{ secrets.FDROID_REPO_KEYSTORE_BASE64 }}
@@ -59,7 +59,8 @@ jobs:
           APP_RELEASE_KEYSTORE_PASSWORD: ${{ secrets.APP_RELEASE_KEYSTORE_PASSWORD }}
           APP_RELEASE_KEY_ALIAS: ${{ secrets.APP_RELEASE_KEY_ALIAS }}
         run: |
-          python scripts/build_repo.py
+          sudo ./target/release/rust-repo-builder patch
+          ./target/release/rust-repo-builder build
 
       - name: Deploy to GitHub Pages (gh-pages branch)
         uses: peaceiris/actions-gh-pages@v4
@@ -68,4 +69,4 @@ jobs:
           publish_dir: ./_site
           publish_branch: gh-pages
           force_orphan: true
-          commit_message: "chore(repo): deploy updated F-Droid repository & signed release APKs"
+          commit_message: "chore(repo): deploy updated F-Droid repository via Rust builder"
