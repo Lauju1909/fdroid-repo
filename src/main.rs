@@ -613,6 +613,44 @@ fn generate_landing_page(apps_data: &[AppEntry], repo_url: &str, base_dir: &Path
     let _ = fs::write(base_dir.join("index.html"), &html);
 }
 
+fn detect_repo_alias(keystore_path: &Path, keystore_pass: &str) -> Option<String> {
+    if !keystore_path.exists() {
+        return None;
+    }
+    if let Ok(output) = Command::new("keytool")
+        .args([
+            "-list",
+            "-keystore",
+            &keystore_path.to_string_lossy(),
+            "-storepass",
+            keystore_pass,
+        ])
+        .output()
+    {
+        if output.status.success() {
+            let stdout = String::from_utf8_lossy(&output.stdout);
+            for line in stdout.lines() {
+                if line.contains("PrivateKeyEntry") || line.contains("trustedCertEntry") {
+                    if let Some(alias) = line.split(',').next() {
+                        let trimmed = alias.trim().to_string();
+                        if !trimmed.is_empty() {
+                            println!("Auto-detected repo key alias from keystore: '{}'", trimmed);
+                            return Some(trimmed);
+                        }
+                    }
+                }
+            }
+            // If no line has PrivateKeyEntry, default to fdroid
+            return Some("fdroid".to_string());
+        } else {
+            let stderr = String::from_utf8_lossy(&output.stderr);
+            println!("Warning: keytool -list failed on keystore: {}", stderr);
+            return None;
+        }
+    }
+    None
+}
+
 fn build_repository(base_dir: &Path) {
     println!("=== [Rust] Starting F-Droid Repository Builder ===");
     let apps_json_path = base_dir.join("apps.json");
@@ -646,7 +684,10 @@ fn build_repository(base_dir: &Path) {
         .ok()
         .filter(|s| !s.is_empty())
         .unwrap_or_else(|| "fdroid-Accessible-Store-Key-2026".to_string());
-    let key_alias = "fdroid-repo-key";
+    let mut key_alias = env::var("FDROID_REPO_KEY_ALIAS")
+        .ok()
+        .filter(|s| !s.is_empty())
+        .unwrap_or_else(|| "fdroid".to_string());
 
     let app_keystore_path = fdroid_dir.join("app-release-keystore.jks");
     let app_keystore_pass = env::var("APP_RELEASE_KEYSTORE_PASSWORD")
@@ -678,8 +719,20 @@ fn build_repository(base_dir: &Path) {
         }
     }
 
+    if keystore_path.exists() {
+        match detect_repo_alias(&keystore_path, &keystore_pass) {
+            Some(detected) => {
+                key_alias = detected;
+            }
+            None => {
+                println!("Warning: Keystore cannot be verified with configured password. Removing to regenerate fresh PKCS12 keystore.");
+                let _ = fs::remove_file(&keystore_path);
+            }
+        }
+    }
+
     if !keystore_path.exists() {
-        println!("Generating persistent PKCS12 keystore for F-Droid repo...");
+        println!("Generating persistent PKCS12 keystore for F-Droid repo with alias '{}'...", key_alias);
         let _ = Command::new("keytool")
             .args([
                 "-genkeypair",
@@ -693,7 +746,7 @@ fn build_repository(base_dir: &Path) {
                 "-keypass",
                 &keystore_pass,
                 "-alias",
-                key_alias,
+                &key_alias,
                 "-keyalg",
                 "RSA",
                 "-keysize",
@@ -902,6 +955,20 @@ keydname: "CN=Lauju Barrierefreier App-Store, OU=Accessibility, O=Lauju1909, L=B
     if repo_dir.exists() {
         let _ = copy_dir_recursive(&repo_dir, &site_fdroid.join("repo"));
         let _ = copy_dir_recursive(&repo_dir, &site_repo);
+        // Also copy repository files directly to root _site so Neo Store / F-Droid resolve from root as well
+        if let Ok(entries) = fs::read_dir(&repo_dir) {
+            for entry in entries.flatten() {
+                let p = entry.path();
+                if p.is_file() {
+                    let fname = entry.file_name();
+                    let dst = site_dir.join(&fname);
+                    // Do not overwrite landing index.html
+                    if fname != "index.html" {
+                        let _ = fs::copy(&p, &dst);
+                    }
+                }
+            }
+        }
     }
     let icon_src = fdroid_dir.join("icon.png");
     if icon_src.exists() {
