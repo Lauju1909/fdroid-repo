@@ -62,8 +62,10 @@ struct AppEntry {
     extra: HashMap<String, serde_json::Value>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Deserialize)]
 struct GitHubAsset {
+    #[serde(default)]
+    url: String,
     name: String,
     browser_download_url: String,
 }
@@ -180,37 +182,65 @@ fn fetch_releases(repo_full_name: &str) -> Vec<GitHubRelease> {
     }
 }
 
-fn download_file(url: &str, dest_path: &Path) -> bool {
-    println!("Downloading {} -> {:?}...", url, dest_path);
+fn download_file(api_url: &str, browser_url: &str, dest_path: &Path) -> bool {
+    println!("Downloading to {:?}...", dest_path);
+    if let Some(parent) = dest_path.parent() {
+        let _ = fs::create_dir_all(parent);
+    }
+    let token = env::var("GITHUB_TOKEN").unwrap_or_default();
+    let dest_str = dest_path.to_string_lossy();
+
+    // 1. Try via GitHub API with curl (fast, reliable, bypasses S3 redirect gateway issues)
+    if !api_url.is_empty() {
+        let mut cmd = Command::new("curl");
+        cmd.args(["-fSL", "--retry", "3", "-H", "Accept: application/octet-stream"]);
+        if !token.trim().is_empty() {
+            cmd.args(["-H", &format!("Authorization: token {}", token.trim())]);
+        }
+        cmd.args(["-o", &dest_str, api_url]);
+        if let Ok(status) = cmd.status() {
+            if status.success() && dest_path.exists() && fs::metadata(dest_path).map(|m| m.len() > 1000).unwrap_or(false) {
+                println!("Saved {:?} via GitHub API ({} bytes)", dest_path, fs::metadata(dest_path).unwrap().len());
+                return true;
+            }
+        }
+    }
+
+    // 2. Try via browser_download_url with curl
+    if !browser_url.is_empty() {
+        let mut cmd = Command::new("curl");
+        cmd.args(["-fSL", "--retry", "3", "-o", &dest_str, browser_url]);
+        if let Ok(status) = cmd.status() {
+            if status.success() && dest_path.exists() && fs::metadata(dest_path).map(|m| m.len() > 1000).unwrap_or(false) {
+                println!("Saved {:?} via browser download URL ({} bytes)", dest_path, fs::metadata(dest_path).unwrap().len());
+                return true;
+            }
+        }
+    }
+
+    // 3. Fallback via ureq
+    let target_url = if !browser_url.is_empty() { browser_url } else { api_url };
     let agent = http_agent();
     for attempt in 1..=3 {
         let mut req = agent
-            .get(url)
+            .get(target_url)
             .set("Accept", "application/vnd.android.package-archive, application/octet-stream, */*");
-        // Only set Authorization for api.github.com, NOT for github.com/releases/download or S3 objects
-        if url.contains("api.github.com") {
-            if let Ok(token) = env::var("GITHUB_TOKEN") {
-                if !token.trim().is_empty() {
-                    req = req.set("Authorization", &format!("token {}", token.trim()));
-                }
-            }
+        if target_url.contains("api.github.com") && !token.trim().is_empty() {
+            req = req.set("Authorization", &format!("token {}", token.trim()));
         }
         match req.call() {
             Ok(resp) => {
                 let mut bytes = Vec::new();
-                if resp.into_reader().read_to_end(&mut bytes).is_ok() && !bytes.is_empty() {
-                    if let Some(parent) = dest_path.parent() {
-                        let _ = fs::create_dir_all(parent);
-                    }
+                if resp.into_reader().read_to_end(&mut bytes).is_ok() && bytes.len() > 1000 {
                     if fs::write(dest_path, &bytes).is_ok() {
-                        println!("Saved {:?} ({} bytes)", dest_path, bytes.len());
+                        println!("Saved {:?} via ureq ({} bytes)", dest_path, bytes.len());
                         return true;
                     }
                 }
             }
             Err(e) => {
-                eprintln!("Download attempt {}/3 failed for {}: {}", attempt, url, e);
-                std::thread::sleep(Duration::from_secs(3));
+                eprintln!("Download attempt {}/3 failed for {}: {}", attempt, target_url, e);
+                std::thread::sleep(Duration::from_secs(2));
             }
         }
     }
@@ -591,6 +621,7 @@ fn build_repository(base_dir: &Path) {
     let metadata_dir = fdroid_dir.join("metadata");
 
     let apps_raw = fs::read_to_string(&apps_json_path).expect("Failed to read apps.json");
+    let mut latest_apks: HashMap<String, PathBuf> = HashMap::new();
     let mut apps_data: Vec<AppEntry> =
         serde_json::from_str(&apps_raw).expect("Failed to parse apps.json");
 
@@ -794,7 +825,7 @@ keydname: "CN=Lauju Barrierefreier App-Store, OU=Accessibility, O=Lauju1909, L=B
                 app.version_name = Some(clean_ver);
             }
 
-            if download_file(dl_url, &dest_path) {
+            if download_file(&best_asset.url, dl_url, &dest_path) {
                 if app_keystore_path.exists() {
                     resign_apk_if_needed(
                         &dest_path,
@@ -804,11 +835,9 @@ keydname: "CN=Lauju Barrierefreier App-Store, OU=Accessibility, O=Lauju1909, L=B
                     );
                 }
 
-                // Also copy with standardized names so direct URLs always resolve
-                let standard_apk = repo_dir.join(format!("{}.apk", pkg_id));
-                let _ = fs::copy(&dest_path, &standard_apk);
-                let latest_apk = repo_dir.join(format!("{}_latest.apk", pkg_id));
-                let _ = fs::copy(&dest_path, &latest_apk);
+                if !latest_apks.contains_key(&pkg_id) {
+                    latest_apks.insert(pkg_id.clone(), dest_path.clone());
+                }
 
                 downloaded_count += 1;
                 seen_tags.insert(tag);
@@ -835,6 +864,16 @@ keydname: "CN=Lauju Barrierefreier App-Store, OU=Accessibility, O=Lauju1909, L=B
     let jar_path = repo_dir.join("index-v1.jar");
     let json_extracted_path = repo_dir.join("index-v1.json");
     let _ = extract_index_json_from_jar(&jar_path, &json_extracted_path);
+
+    // AFTER fdroid update has successfully generated indices:
+    // Create standardized aliases for direct download URLs so both F-Droid index and direct links resolve
+    for (pkg_id, apk_src) in &latest_apks {
+        let standard_apk = repo_dir.join(format!("{}.apk", pkg_id));
+        let _ = fs::copy(apk_src, &standard_apk);
+        let latest_apk = repo_dir.join(format!("{}_latest.apk", pkg_id));
+        let _ = fs::copy(apk_src, &latest_apk);
+        println!("Created direct URL aliases for {}: {}.apk and {}_latest.apk", pkg_id, pkg_id, pkg_id);
+    }
 
     // Remove keystore before staging
     if app_keystore_path.exists() {
