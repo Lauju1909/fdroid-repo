@@ -137,7 +137,7 @@ fn patch_androguard_and_fdroid() {
                     new_lines.push(format!("{}    apk = scan_apk(apkfile)", indent));
                     new_lines.push(format!("{}except Exception as e:", indent));
                     new_lines.push(format!("{}    logging.warning(f'scan_apk failed on {{apkfile}}: {{e}}')", indent));
-                    new_lines.push(format!("{}    continue", indent));
+                    new_lines.push(format!("{}    return None", indent));
                     patched = true;
                 } else {
                     new_lines.push(line.to_string());
@@ -183,33 +183,38 @@ fn fetch_releases(repo_full_name: &str) -> Vec<GitHubRelease> {
 fn download_file(url: &str, dest_path: &Path) -> bool {
     println!("Downloading {} -> {:?}...", url, dest_path);
     let agent = http_agent();
-    let mut req = agent
-        .get(url)
-        .set("Accept", "application/vnd.android.package-archive, application/octet-stream, */*");
-    if let Ok(token) = env::var("GITHUB_TOKEN") {
-        if !token.trim().is_empty() {
-            req = req.set("Authorization", &format!("token {}", token.trim()));
-        }
-    }
-    match req.call() {
-        Ok(resp) => {
-            let mut bytes = Vec::new();
-            if resp.into_reader().read_to_end(&mut bytes).is_ok() {
-                if let Some(parent) = dest_path.parent() {
-                    let _ = fs::create_dir_all(parent);
-                }
-                if fs::write(dest_path, &bytes).is_ok() {
-                    println!("Saved {:?} ({} bytes)", dest_path, bytes.len());
-                    return true;
+    for attempt in 1..=3 {
+        let mut req = agent
+            .get(url)
+            .set("Accept", "application/vnd.android.package-archive, application/octet-stream, */*");
+        // Only set Authorization for api.github.com, NOT for github.com/releases/download or S3 objects
+        if url.contains("api.github.com") {
+            if let Ok(token) = env::var("GITHUB_TOKEN") {
+                if !token.trim().is_empty() {
+                    req = req.set("Authorization", &format!("token {}", token.trim()));
                 }
             }
-            false
         }
-        Err(e) => {
-            eprintln!("Failed to download {}: {}", url, e);
-            false
+        match req.call() {
+            Ok(resp) => {
+                let mut bytes = Vec::new();
+                if resp.into_reader().read_to_end(&mut bytes).is_ok() && !bytes.is_empty() {
+                    if let Some(parent) = dest_path.parent() {
+                        let _ = fs::create_dir_all(parent);
+                    }
+                    if fs::write(dest_path, &bytes).is_ok() {
+                        println!("Saved {:?} ({} bytes)", dest_path, bytes.len());
+                        return true;
+                    }
+                }
+            }
+            Err(e) => {
+                eprintln!("Download attempt {}/3 failed for {}: {}", attempt, url, e);
+                std::thread::sleep(Duration::from_secs(3));
+            }
         }
     }
+    false
 }
 
 fn fetch_app_icon(repo_full_name: &str, dest_dir: &Path, safe_repo_prefix: &str) -> Option<String> {
