@@ -1,7 +1,7 @@
 use base64::engine::general_purpose::STANDARD as BASE64;
 use base64::Engine;
 use serde::{Deserialize, Serialize};
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::env;
 use std::fs;
 use std::io::Read;
@@ -15,9 +15,13 @@ const REPO_NAME_DEFAULT: &str = "fdroid-repo";
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct AppEntry {
+    #[serde(default)]
+    id: Option<String>,
     repo: String,
     #[serde(default)]
     name: String,
+    #[serde(default)]
+    author: Option<String>,
     #[serde(default)]
     category: String,
     #[serde(default)]
@@ -25,7 +29,13 @@ struct AppEntry {
     #[serde(default)]
     description: String,
     #[serde(default)]
+    desc: Option<String>,
+    #[serde(default)]
     package_name: Option<String>,
+    #[serde(default)]
+    version_name: Option<String>,
+    #[serde(default)]
+    version_code: Option<u64>,
     #[serde(default)]
     release_tag: Option<String>,
     #[serde(default)]
@@ -33,7 +43,23 @@ struct AppEntry {
     #[serde(default)]
     release_date: Option<String>,
     #[serde(default)]
+    icon: Option<String>,
+    #[serde(default)]
     icon_url: Option<String>,
+    #[serde(default)]
+    status: Option<String>,
+    #[serde(default)]
+    payment_type: Option<String>,
+    #[serde(default)]
+    price: Option<String>,
+    #[serde(default)]
+    payment_url: Option<String>,
+    #[serde(default)]
+    is_beta: Option<bool>,
+    #[serde(default)]
+    hide_author: Option<bool>,
+    #[serde(flatten)]
+    extra: HashMap<String, serde_json::Value>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -85,7 +111,7 @@ fn patch_androguard_and_fdroid() {
 
     for f in axml_files {
         if let Ok(mut content) = fs::read_to_string(&f) {
-            println!("Patching {:?}...", f);
+            println!("Patching axml {:?}...", f);
             content = content.replace("raise ResParserError", "pass # raise ResParserError");
             let _ = fs::write(&f, content);
         }
@@ -93,20 +119,33 @@ fn patch_androguard_and_fdroid() {
 
     for f in apk_files {
         if let Ok(mut content) = fs::read_to_string(&f) {
-            println!("Patching {:?}...", f);
+            println!("Patching apk {:?}...", f);
             content = content.replace("raise APKError", "pass # raise APKError");
             let _ = fs::write(&f, content);
         }
     }
 
     for f in update_files {
-        if let Ok(mut content) = fs::read_to_string(&f) {
-            println!("Patching {:?}...", f);
-            let old = "apk = scan_apk(apkfile)";
-            let new_code = "try:\n            apk = scan_apk(apkfile)\n        except Exception as e:\n            logging.warning(f'scan_apk failed on {apkfile}: {e}')\n            continue";
-            if content.contains(old) {
-                content = content.replace(old, new_code);
-                let _ = fs::write(&f, content);
+        if let Ok(content) = fs::read_to_string(&f) {
+            println!("Checking / patching scan_apk in {:?}...", f);
+            let mut new_lines = Vec::new();
+            let mut patched = false;
+            for line in content.lines() {
+                if line.trim() == "apk = scan_apk(apkfile)" {
+                    let indent = line.chars().take_while(|c| c.is_whitespace()).collect::<String>();
+                    new_lines.push(format!("{}try:", indent));
+                    new_lines.push(format!("{}    apk = scan_apk(apkfile)", indent));
+                    new_lines.push(format!("{}except Exception as e:", indent));
+                    new_lines.push(format!("{}    logging.warning(f'scan_apk failed on {{apkfile}}: {{e}}')", indent));
+                    new_lines.push(format!("{}    continue", indent));
+                    patched = true;
+                } else {
+                    new_lines.push(line.to_string());
+                }
+            }
+            if patched {
+                println!("Successfully patched {:?} with consistent indentation.", f);
+                let _ = fs::write(&f, new_lines.join("\n"));
             }
         }
     }
@@ -116,7 +155,7 @@ fn http_agent() -> ureq::Agent {
     ureq::AgentBuilder::new()
         .timeout_read(Duration::from_secs(60))
         .timeout_write(Duration::from_secs(30))
-        .user_agent("FDroid-Rust-Builder/2.0")
+        .user_agent("FDroid-Rust-Builder/2.0 (compatible; Android-Accessibility-Catalog)")
         .build()
 }
 
@@ -144,7 +183,9 @@ fn fetch_releases(repo_full_name: &str) -> Vec<GitHubRelease> {
 fn download_file(url: &str, dest_path: &Path) -> bool {
     println!("Downloading {} -> {:?}...", url, dest_path);
     let agent = http_agent();
-    let mut req = agent.get(url);
+    let mut req = agent
+        .get(url)
+        .set("Accept", "application/vnd.android.package-archive, application/octet-stream, */*");
     if let Ok(token) = env::var("GITHUB_TOKEN") {
         if !token.trim().is_empty() {
             req = req.set("Authorization", &format!("token {}", token.trim()));
@@ -275,6 +316,29 @@ fn resign_apk_if_needed(
     }
 }
 
+fn extract_index_json_from_jar(jar_path: &Path, output_json_path: &Path) -> bool {
+    if !jar_path.exists() {
+        return false;
+    }
+    if let Ok(file) = fs::File::open(jar_path) {
+        if let Ok(mut archive) = zip::ZipArchive::new(file) {
+            if let Ok(mut index_file) = archive.by_name("index-v1.json") {
+                let mut content = Vec::new();
+                if index_file.read_to_end(&mut content).is_ok() {
+                    if let Some(parent) = output_json_path.parent() {
+                        let _ = fs::create_dir_all(parent);
+                    }
+                    if fs::write(output_json_path, &content).is_ok() {
+                        println!("Extracted index-v1.json successfully from {:?} ({} bytes)", jar_path, content.len());
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    false
+}
+
 fn copy_dir_recursive(src: &Path, dst: &Path) -> std::io::Result<()> {
     if !dst.exists() {
         fs::create_dir_all(dst)?;
@@ -309,7 +373,13 @@ fn generate_landing_page(apps_data: &[AppEntry], repo_url: &str, base_dir: &Path
         } else {
             &app.name
         });
-        let summary = html_escape(&app.summary);
+        let summary = html_escape(if !app.summary.is_empty() {
+            &app.summary
+        } else if let Some(ref d) = app.desc {
+            d
+        } else {
+            &app.description
+        });
         let category = html_escape(if app.category.is_empty() {
             "Allgemein"
         } else {
@@ -637,6 +707,10 @@ keydname: "CN=Lauju Barrierefreier App-Store, OU=Accessibility, O=Lauju1909, L=B
         println!("Checking releases for {}...", repo_full_name);
         let safe_repo_prefix = repo_full_name.replace('/', "_");
 
+        let pkg_id = app.id.clone().or_else(|| app.package_name.clone()).unwrap_or_else(|| safe_repo_prefix.clone());
+        app.id = Some(pkg_id.clone());
+        app.package_name = Some(pkg_id.clone());
+
         if let Some(rel_icon_path) =
             fetch_app_icon(&repo_full_name, &site_icons_dir, &safe_repo_prefix)
         {
@@ -651,6 +725,9 @@ keydname: "CN=Lauju Barrierefreier App-Store, OU=Accessibility, O=Lauju1909, L=B
         let mut seen_tags = HashSet::new();
 
         for (rel_idx, rel) in releases.iter().enumerate() {
+            if downloaded_count >= 3 {
+                break;
+            }
             let tag = if rel.tag_name.is_empty() {
                 format!("v1.0.{}", rel_idx)
             } else {
@@ -708,29 +785,12 @@ keydname: "CN=Lauju Barrierefreier App-Store, OU=Accessibility, O=Lauju1909, L=B
                 app.release_tag = Some(tag.clone());
                 app.direct_apk_url = Some(dl_url.clone());
                 app.release_date = Some(rel.published_at.clone());
-                if !app_keystore_path.exists() {
-                    let _ = download_file(dl_url, &dest_path);
-                }
-                downloaded_count += 1;
-                seen_tags.insert(tag);
-                if !app_keystore_path.exists() {
-                    break;
-                }
-            } else if app_keystore_path.exists() && downloaded_count < 3 {
-                if download_file(dl_url, &dest_path) {
-                    resign_apk_if_needed(
-                        &dest_path,
-                        &app_keystore_path,
-                        &app_keystore_pass,
-                        &app_key_alias,
-                    );
-                    downloaded_count += 1;
-                    seen_tags.insert(tag);
-                }
+                let clean_ver = tag.trim_start_matches('v').to_string();
+                app.version_name = Some(clean_ver);
             }
 
-            if downloaded_count == 1 && app_keystore_path.exists() {
-                if download_file(dl_url, &dest_path) {
+            if download_file(dl_url, &dest_path) {
+                if app_keystore_path.exists() {
                     resign_apk_if_needed(
                         &dest_path,
                         &app_keystore_path,
@@ -738,6 +798,15 @@ keydname: "CN=Lauju Barrierefreier App-Store, OU=Accessibility, O=Lauju1909, L=B
                         &app_key_alias,
                     );
                 }
+
+                // Also copy with standardized names so direct URLs always resolve
+                let standard_apk = repo_dir.join(format!("{}.apk", pkg_id));
+                let _ = fs::copy(&dest_path, &standard_apk);
+                let latest_apk = repo_dir.join(format!("{}_latest.apk", pkg_id));
+                let _ = fs::copy(&dest_path, &latest_apk);
+
+                downloaded_count += 1;
+                seen_tags.insert(tag);
             }
         }
     }
@@ -757,6 +826,11 @@ keydname: "CN=Lauju Barrierefreier App-Store, OU=Accessibility, O=Lauju1909, L=B
             .status();
     }
 
+    // Extract index-v1.json from index-v1.jar if generated
+    let jar_path = repo_dir.join("index-v1.jar");
+    let json_extracted_path = repo_dir.join("index-v1.json");
+    let _ = extract_index_json_from_jar(&jar_path, &json_extracted_path);
+
     // Remove keystore before staging
     if app_keystore_path.exists() {
         let _ = fs::remove_file(&app_keystore_path);
@@ -771,17 +845,24 @@ keydname: "CN=Lauju Barrierefreier App-Store, OU=Accessibility, O=Lauju1909, L=B
     generate_landing_page(&apps_data, &repo_url, base_dir);
 
     let site_fdroid = site_dir.join("fdroid");
+    let site_repo = site_dir.join("repo");
     if site_fdroid.exists() {
         let _ = fs::remove_dir_all(&site_fdroid);
     }
+    if site_repo.exists() {
+        let _ = fs::remove_dir_all(&site_repo);
+    }
     let _ = fs::create_dir_all(&site_fdroid);
+    let _ = fs::create_dir_all(&site_repo);
 
     if repo_dir.exists() {
         let _ = copy_dir_recursive(&repo_dir, &site_fdroid.join("repo"));
+        let _ = copy_dir_recursive(&repo_dir, &site_repo);
     }
     let icon_src = fdroid_dir.join("icon.png");
     if icon_src.exists() {
         let _ = fs::copy(&icon_src, site_fdroid.join("icon.png"));
+        let _ = fs::copy(&icon_src, site_dir.join("icon.png"));
     }
 
     let _ = fs::write(site_dir.join(".nojekyll"), "");
