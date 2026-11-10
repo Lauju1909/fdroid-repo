@@ -131,5 +131,20 @@
     "paymentUrl": "",
     "isBeta": true,
     "hideAuthor": false
+  },
+  {
+    "repo": "Lauju1909/BarrierefreierSchrittzaehler-Android",
+    "name": "Schrittzähler Barrierefrei",
+    "author": "Lauju1909",
+    "id": "de.lauri.schrittzaehler",
+    "category": "sports",
+    "icon": "https://raw.githubusercontent.com/Lauju1909/BarrierefreierSchrittzaehler-Android/main/fastlane/metadata/android/de-DE/images/icon.png",
+    "desc": "Barrierefreier Schrittzähler mit TalkBack, Sprachausgabe, Schüttel-Geste und Perioden-Statistiken (Tag, Woche, Monat, Jahr)",
+    "status": "approved",
+    "paymentType": "free",
+    "price": "",
+    "paymentUrl": "",
+    "isBeta": false,
+    "hideAuthor": false
   }
 ]
