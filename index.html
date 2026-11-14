@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barrierefreier F-Droid App-Store &amp; Repository (Powered by Rust)</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f8fafc;
+            --muted: #cbd5e1;
+            --accent: #38bdf8;
+            --accent-dark: #0284c7;
+            --border: #334155;
+            --focus: #facc15;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header, main, footer {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+        header {
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 1.5rem;
+        }
+        h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .repo-box {
+            background: var(--card);
+            border: 2px solid var(--accent);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .repo-url {
+            display: block;
+            width: 100%;
+            background: #020617;
+            color: var(--accent);
+            border: 1px solid var(--border);
+            padding: 0.85rem;
+            font-size: 1.05rem;
+            font-family: monospace;
+            border-radius: 8px;
+            margin: 0.75rem 0;
+            word-break: break-all;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            border: 2px solid transparent;
+            font-size: 1rem;
+            margin-right: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .btn:focus-visible, a:focus-visible, button:focus-visible {
+            outline: 3px solid var(--focus);
+            outline-offset: 2px;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #020617;
+        }
+        .btn-primary:hover {
+            background: #7dd3fc;
+        }
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border-color: var(--border);
+        }
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 1.25rem;
+        }
+        .app-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .category-badge {
+            display: inline-block;
+            background: #334155;
+            color: var(--accent);
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        footer {
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header role="banner">
+        <h1>♿ Barrierefreies F-Droid Repository</h1>
+        <p>Offizieller Katalog für barrierefreie Apps (TalkBack-optimiert). Füge diese Paketquelle in <strong>F-Droid</strong>, <strong>Droid-ify</strong>, <strong>Neo Store</strong> oder direkt in unserer <strong>Barrierefreien App-Store App</strong> hinzu.</p>
+    </header>
+
+    <main role="main">
+        <section class="repo-box" aria-labelledby="repo-heading">
+            <h2 id="repo-heading">🔗 F-Droid Paketquellen-Adresse (Repository URL)</h2>
+            <p>Kopiere diesen Link in F-Droid unter <em>Einstellungen → Paketquellen → Neue Paketquelle hinzufügen</em>:</p>
+            <code class="repo-url" id="repoUrlText">https://Lauju1909.github.io/fdroid-repo/fdroid/repo</code>
+            <div>
+                <button class="btn btn-primary" onclick="navigator.clipboard.writeText('https://Lauju1909.github.io/fdroid-repo/fdroid/repo').then(() => alert('Paketquellen-URL wurde in die Zwischenablage kopiert!'))">
+                    📋 URL kopieren
+                </button>
+                <a class="btn btn-secondary" href="fdroidrepos://https://Lauju1909.github.io/fdroid-repo/fdroid/repo">
+                    📲 Direkt in F-Droid öffnen
+                </a>
+            </div>
+        </section>
+
+        <section aria-labelledby="apps-heading">
+            <h2 id="apps-heading">📦 Enthaltene Apps (9)</h2>
+            <div class="app-grid" role="list">
+                
+        <article class="app-card" role="listitem">
+            <div class="app-header">
+                <span class="category-badge">Allgemein</span>
+                <h3>Haushaltsbuch Barrierefrei</h3>
+            </div>
+            <p>Barrierefreies Haushaltsbuch mit TalkBack-Unterstützung und sicherem Offline-Tresor</p>
+            <div class="app-actions">
+                <a href="https://github.com/Lauju1909/BarrierefreieFinanzApp-Android/releases/download/v6.9.78/app-release.apk" class="btn btn-primary" aria-label="Haushaltsbuch Barrierefrei Version v6.9.78 direkt als APK herunterladen">📥 Direkt-APK (v6.9.78)</a>
+                <a href="https://github.com/Lauju1909/BarrierefreieFinanzApp-Android" target="_blank" rel="noopener" class="btn btn-secondary" aria-label="Quellcode von Haushaltsbuch Barrierefrei auf GitHub ansehen">💻 GitHub</a>
+            </div>
+        </article>
+        
+        <article class="app-card" role="listitem">
+            <div class="app-header">
+                <span class="category-badge">tools</span>
+                <h3>Audio Studio Tycoon</h3>
+            </div>
+            <p>Tiefe Spieleentwickler-Simulation für blinde und sehbehinderte Spieler (TalkBack-optimiert)</p>
+            <div class="app-actions">
+                <a href="https://github.com/Lauju1909/Audio-Studio-Tycoon-Android/releases/download/v1.0.2/app-release.apk" class="btn btn-primary" aria-label="Audio Studio Tycoon Version v1.0.2 direkt als APK herunterladen">📥 Direkt-APK (v1.0.2)</a>
+                <a href="https://github.com/Lauju1909/Audio-Studio-Tycoon-Android" target="_blank" rel="noopener" class="btn btn-secondary" aria-label="Quellcode von Audio Studio Tycoon auf GitHub ansehen">💻 GitHub</a>
+            </div>
+        </article>
+        
+        <article class="app-card" role="listitem">
+            <div class="app-header">
+                <span class="category-badge">tools</span>
+                <h3>Audio Mini Games</h3>
+            </div>
+            <p>75 barrierefreie Audio-Minispiele mit 5-Tasten-Touchpad und 3D-Kopfhörer-Ortung (Action, Logik, Navigation, Wissen, Simulation)</p>
+            <div class="app-actions">
+                <a href="https://github.com/Lauju1909/Mini_Game_Sammlung_Android/releases/download/v1.0.2/app-release.apk" class="btn btn-primary" aria-label="Audio Mini Games Version v1.0.2 direkt als APK herunterladen">📥 Direkt-APK (v1.0.2)</a>
+                <a href="https://github.com/Lauju1909/Mini_Game_Sammlung_Android" target="_blank" rel="noopener" class="btn btn-secondary" aria-label="Quellcode von Audio Mini Games auf GitHub ansehen">💻 GitHub</a>
+            </div>
+        </article>
+        
+        <article class="app-card" role="listitem">
+            <div class="app-header">
+                <span class="category-badge">tools</span>
+                <h3>VokabelStar</h3>
+            </div>
+            <p>Barrierefreier Vokabeltrainer wie Duolingo – speziell optimiert für TalkBack &amp; Screenreader</p>
+            <div class="app-actions">
+                <a href="https://github.com/Lauju1909/VokabelStar-Android/releases/download/v1.3.6/app-release.apk" class="btn btn-primary" aria-label="VokabelStar Version v1.3.6 direkt als APK herunterladen">📥 Direkt-APK (v1.3.6)</a>
+                <a href="https://github.com/Lauju1909/VokabelStar-Android" target="_blank" rel="noopener" class="btn btn-secondary" aria-label="Quellcode von VokabelStar auf GitHub ansehen">💻 GitHub</a>
+            </div>
+        </article>
+        
+        <article class="app-card" role="listitem">
+            <div class="app-header">
+                <span class="category-badge">tools</span>
+                <h3>BFW Vokabel-Verwaltung</h3>
+            </div>
+            <p>Vokabel-Hub für Wirtschaftsenglisch BFW 1 &amp; BFW 2 (VokabelStar &amp; VokabelMeister)</p>
+            <div class="app-actions">
+                <a href="https://github.com/Lauju1909/BFW-Wirtschaftsenglisch-Android/releases/download/v1.2.3/app-release.apk" class="btn btn-primary" aria-label="BFW Vokabel-Verwaltung Version v1.2.3 direkt als APK herunterladen">📥 Direkt-APK (v1.2.3)</a>
+                <a href="https://github.com/Lauju1909/BFW-Wirtschaftsenglisch-Android" target="_blank" rel="noopener" class="btn btn-secondary" aria-label="Quellcode von BFW Vokabel-Verwaltung auf GitHub ansehen">💻 GitHub</a>
+            </div>
+        </article>
+        
+        <article class="app-card" role="listitem">
+            <div class="app-header">
+                <span class="category-badge">Allgemein</span>
+                <h3>Lernplattform Android</h3>
+            </div>
+            <p>Barrierefreie Lern- und Wissensplattform für Schule &amp; Alltag (TalkBack-optimiert)</p>
+            <div class="app-actions">
+                <a href="https://github.com/Lauju1909/Lernplatform-Android/releases/download/v1.2.9/app-release.apk" class="btn btn-primary" aria-label="Lernplattform Android Version v1.2.9 direkt als APK herunterladen">📥 Direkt-APK (v1.2.9)</a>
+                <a href="https://github.com/Lauju1909/Lernplatform-Android" target="_blank" rel="noopener" class="btn btn-secondary" aria-label="Quellcode von Lernplattform Android auf GitHub ansehen">💻 GitHub</a>
+            </div>
+        </article>
+        
+        <article class="app-card" role="listitem">
+            <div class="app-header">
+                <span class="category-badge">education</span>
+                <h3>Barrierefreies WebUntis</h3>
+            </div>
+            <p>Barrierefreier Stundenplan und Mensaplan für WebUntis – 100% TalkBack- und Screenreader-optimiert</p>
+            <div class="app-actions">
+                <a href="https://github.com/Lauju1909/BarrierefreierStundenplanLWL-Android/releases/download/v1.9.41/app-release.apk" class="btn btn-primary" aria-label="Barrierefreies WebUntis Version v1.9.41 direkt als APK herunterladen">📥 Direkt-APK (v1.9.41)</a>
+                <a href="https://github.com/Lauju1909/BarrierefreierStundenplanLWL-Android" target="_blank" rel="noopener" class="btn btn-secondary" aria-label="Quellcode von Barrierefreies WebUntis auf GitHub ansehen">💻 GitHub</a>
+            </div>
+        </article>
+        
+        <article class="app-card" role="listitem">
+            <div class="app-header">
+                <span class="category-badge">tools</span>
+                <h3>Dokumenten-Betrachter Barrierefrei</h3>
+            </div>
+            <p>Barrierefreier Dokumenten-Betrachter für LibreOffice (ODT, ODS), Word (DOCX), PDF und Text mit TalkBack-Fokus</p>
+            <div class="app-actions">
+                <a href="https://github.com/Lauju1909/BarrierefreierDokumentenBetrachter-Android/releases/download/v1.0.8/app-release.apk" class="btn btn-primary" aria-label="Dokumenten-Betrachter Barrierefrei Version v1.0.8 direkt als APK herunterladen">📥 Direkt-APK (v1.0.8)</a>
+                <a href="https://github.com/Lauju1909/BarrierefreierDokumentenBetrachter-Android" target="_blank" rel="noopener" class="btn btn-secondary" aria-label="Quellcode von Dokumenten-Betrachter Barrierefrei auf GitHub ansehen">💻 GitHub</a>
+            </div>
+        </article>
+        
+        <article class="app-card" role="listitem">
+            <div class="app-header">
+                <span class="category-badge">sports</span>
+                <h3>Schrittzähler Barrierefrei</h3>
+            </div>
+            <p>Barrierefreier Schrittzähler mit TalkBack, Sprachausgabe, Schüttel-Geste und Perioden-Statistiken (Tag, Woche, Monat, Jahr)</p>
+            <div class="app-actions">
+                <a href="https://github.com/Lauju1909/BarrierefreierSchrittzaehler-Android/releases/download/v1.0.0/Schrittzaehler_Barrierefrei_Release.apk" class="btn btn-primary" aria-label="Schrittzähler Barrierefrei Version v1.0.0 direkt als APK herunterladen">📥 Direkt-APK (v1.0.0)</a>
+                <a href="https://github.com/Lauju1909/BarrierefreierSchrittzaehler-Android" target="_blank" rel="noopener" class="btn btn-secondary" aria-label="Quellcode von Schrittzähler Barrierefrei auf GitHub ansehen">💻 GitHub</a>
+            </div>
+        </article>
+        
+            </div>
+        </section>
+    </main>
+
+    <footer role="contentinfo">
+        <p>Automatisch aktualisiert via Rust &amp; GitHub Actions • Barrierefrei gestaltet für Screenreader (TalkBack / NVDA).</p>
+    </footer>
+</body>
+</html>
