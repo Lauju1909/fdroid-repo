@@ -1,0 +1,20 @@
+Name: LWL Speiseplan
+AutoName: LWL Speiseplan
+Summary: Barrierefreier Mensa-Speiseplan für Soest – ganz ohne Anmeldung und TalkBack-optimiert
+Categories:
+  - Education
+License: MIT
+AuthorName: Lauju1909
+SourceCode: https://github.com/Lauju1909/LWL-Speiseplan-Android
+IssueTracker: https://github.com/Lauju1909/LWL-Speiseplan-Android/issues
+Description: |-
+  LWL Speiseplan zeigt ausschließlich die aktuellen Mensa-Speisepläne der
+  LWL-Von-Vincke-Schule und des LWL-Berufsbildungswerks Soest an –
+  schnell, barrierefrei und komplett ohne Anmeldung.
+
+  Features:
+  - Sofortiger Start ohne Login oder Konto
+  - Automatische Live-Aktualisierung und Offline-Speicherung
+  - Wochenauswahl inkl. automatischer Vorschau auf die kommende Schulwoche am Wochenende
+  - Menü-Filter (Vollkost, Muslimisch ohne Schwein, Vegetarisch) und Tagesfilter
+  - Integrierte Vorlesefunktion, TalkBack-Optimierung, Kontrastmodi und Allergen-Legende
