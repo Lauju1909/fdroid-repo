@@ -1,0 +1,22 @@
+Name: KlarDaten – Daten-Manager Barrierefrei
+AutoName: KlarDaten
+Summary: Barrierefreier Daten-Manager für mobile Daten, Roaming, WLAN & Verbrauch pro App
+Categories:
+  - System
+  - Connectivity
+License: MIT
+AuthorName: Lauju1909
+SourceCode: https://github.com/Lauju1909/KlarDaten-Android
+IssueTracker: https://github.com/Lauju1909/KlarDaten-Android/issues
+Description: |-
+  KlarDaten misst deinen mobilen Datenverbrauch, Roaming und WLAN getrennt und
+  zeigt übersichtlich an, welche Apps wie viel verbrauchen – vollständig
+  barrierefrei und optimiert für TalkBack, hohen Kontrast und große Schrift.
+
+  Features:
+  - Getrennte Messung von mobilen Daten (Inland), Roaming (Ausland) und WLAN
+  - Vertrags-Vorlagen für Vodafone (inkl. GigaDepot), Telekom, O2, Congstar, 1&1 sowie freie GB-Eingabe
+  - Automatische oder manuelle Daten-Mitnahme vom Vormonat, Bonus-GB und Zusatz-Datenpässe
+  - Sortierte App-Liste mit Verbrauch pro App (filterbar nach Mobil, Roaming, WLAN, Gesamt)
+  - Automatische Warnungen bei hohem Verbrauch (z. B. 80 % / 95 %) und aktivem Roaming
+  - 100 % TalkBack-optimiert, Hoher-Kontrast-Modus, extra große Schrift und Demo-Modus
