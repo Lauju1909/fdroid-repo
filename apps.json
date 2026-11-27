@@ -161,5 +161,20 @@
     "paymentUrl": "",
     "isBeta": false,
     "hideAuthor": false
+  },
+  {
+    "repo": "Lauju1909/NutriCheck-Android",
+    "name": "NutriCheck – Ernährung Barrierefrei",
+    "author": "Lauju1909",
+    "id": "com.nutricheck.app",
+    "category": "sports",
+    "icon": "https://raw.githubusercontent.com/Lauju1909/NutriCheck-Android/main/fastlane/metadata/android/de-DE/images/icon.png",
+    "desc": "100 % kostenlose, TalkBack-barrierefreie Ernährungs-App mit zutaten-basiertem Tracking, Anti-Austricks-Schutz, Foto-Erkennung, Barcode-Scanner (Open Food Facts), Optimal-Check (16 Nährstoffe + Ballaststoffe + Wasser) sowie Tages-, Wochen- und Monatsansicht",
+    "status": "approved",
+    "paymentType": "free",
+    "price": "",
+    "paymentUrl": "",
+    "isBeta": false,
+    "hideAuthor": false
   }
 ]

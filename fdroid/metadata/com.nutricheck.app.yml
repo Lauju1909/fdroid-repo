@@ -1,0 +1,24 @@
+Name: NutriCheck – Ernährung Barrierefrei
+AutoName: NutriCheck
+Summary: Kostenlose, barrierefreie Ernährungs-App mit Zutaten-Prüfung, Ballaststoff- & Optimal-Check
+Categories:
+  - Sports & Health
+  - Science & Education
+License: MIT
+AuthorName: Lauju1909
+SourceCode: https://github.com/Lauju1909/NutriCheck-Android
+IssueTracker: https://github.com/Lauju1909/NutriCheck-Android/issues
+Description: |-
+  NutriCheck ist eine 100 % kostenlose, lokale und TalkBack-barrierefreie
+  Ernährungs-App für Android. Sie trackt Frühstück, Mittagessen, Abendbrot,
+  Snacks und Wasser – und berechnet Kalorien, Ballaststoffe, Makros, Vitamine
+  und Mineralstoffe strikt aus den tatsächlichen Zutaten.
+
+  Features:
+  - Zutaten-basiertes Tracking statt pauschaler Gerichtsnamen (kein Schönrechnen durch Umbenennen wie Nudelsuppe zu Nudeleintopf)
+  - Einfacher 1-Tipp-Zutaten-Assistent mit gezielten Rückfragen (z. B. Vollkorn- vs. Weizennudeln, Gemüse, Brühe, Portionsgröße)
+  - Kostenlose On-Device Foto-Erkennung (Google ML Kit, offline) plus optionaler kostenloser Gemini Free-Tier-Modus
+  - Kostenloser Barcode-Scanner via Open Food Facts (inkl. barrierefreier manueller EAN-Eingabe)
+  - Automatischer Optimal-Check für 16 Nährstoffe + Wasser mit Ampel-Bewertung und Tipps
+  - Tages-, Wochen- und Monatsansicht mit TalkBack-Diagramm-Zusammenfassung und Kalender
+  - 100 % lokal auf dem Gerät gespeichert (kein Konto, inkl. JSON-Backup)
