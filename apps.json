@@ -24,8 +24,8 @@
     "hide_author": null,
     "isBeta": false,
     "hideAuthor": false,
-    "paymentUrl": "https://ko-fi.com/lauju1909",
-    "paymentType": "free"
+    "paymentType": "free",
+    "paymentUrl": "https://ko-fi.com/lauju1909"
   },
   {
     "id": "de.lauri.audiostudiotycoon",
@@ -50,10 +50,10 @@
     "payment_url": null,
     "is_beta": null,
     "hide_author": null,
+    "paymentType": "free",
     "isBeta": true,
-    "hideAuthor": false,
     "paymentUrl": "",
-    "paymentType": "free"
+    "hideAuthor": false
   },
   {
     "id": "de.lauri.minigames",
@@ -78,10 +78,10 @@
     "payment_url": null,
     "is_beta": null,
     "hide_author": null,
-    "paymentType": "free",
-    "paymentUrl": "",
     "hideAuthor": false,
-    "isBeta": true
+    "paymentUrl": "",
+    "isBeta": true,
+    "paymentType": "free"
   },
   {
     "id": "de.lauri.vokabelstar",
@@ -107,8 +107,8 @@
     "is_beta": null,
     "hide_author": null,
     "hideAuthor": false,
-    "paymentUrl": "",
     "isBeta": true,
+    "paymentUrl": "",
     "paymentType": "free"
   },
   {
@@ -134,10 +134,10 @@
     "payment_url": null,
     "is_beta": null,
     "hide_author": null,
-    "isBeta": true,
-    "hideAuthor": false,
     "paymentType": "free",
-    "paymentUrl": ""
+    "paymentUrl": "",
+    "hideAuthor": false,
+    "isBeta": true
   },
   {
     "id": "de.lauri.lernplatform",
@@ -163,9 +163,9 @@
     "is_beta": null,
     "hide_author": null,
     "paymentUrl": "",
-    "isBeta": false,
     "hideAuthor": false,
-    "paymentType": "free"
+    "paymentType": "free",
+    "isBeta": false
   },
   {
     "id": "de.lwl.stundenplan",
@@ -190,8 +190,8 @@
     "payment_url": null,
     "is_beta": null,
     "hide_author": null,
-    "paymentUrl": "",
     "paymentType": "free",
+    "paymentUrl": "",
     "hideAuthor": false,
     "isBeta": false
   },
@@ -220,8 +220,8 @@
     "hide_author": null,
     "paymentUrl": "",
     "isBeta": true,
-    "hideAuthor": false,
-    "paymentType": "free"
+    "paymentType": "free",
+    "hideAuthor": false
   },
   {
     "id": "de.lauri.schrittzaehler",
@@ -246,10 +246,10 @@
     "payment_url": null,
     "is_beta": null,
     "hide_author": null,
-    "paymentUrl": "",
     "hideAuthor": false,
-    "paymentType": "free",
-    "isBeta": false
+    "isBeta": false,
+    "paymentUrl": "",
+    "paymentType": "free"
   },
   {
     "id": "de.lwl.speiseplan",
@@ -274,10 +274,10 @@
     "payment_url": null,
     "is_beta": null,
     "hide_author": null,
-    "paymentUrl": "",
-    "hideAuthor": false,
     "paymentType": "free",
-    "isBeta": false
+    "hideAuthor": false,
+    "isBeta": false,
+    "paymentUrl": ""
   },
   {
     "id": "de.klardaten.app",
@@ -303,9 +303,9 @@
     "is_beta": null,
     "hide_author": null,
     "paymentType": "free",
+    "hideAuthor": false,
     "isBeta": false,
-    "paymentUrl": "",
-    "hideAuthor": false
+    "paymentUrl": ""
   },
   {
     "id": "com.nutricheck.app",
@@ -317,11 +317,11 @@
     "description": "",
     "desc": "100 % kostenlose, TalkBack-barrierefreie Ernährungs-App (v2.0): Essen einfach per Spracheingabe oder in einfacher Sprache erfassen (automatische Erkennung + Rückfragen), über 240 deutsche Offline-Grundzutaten, eigene Rezepte, Anti-Austricks-Schutz, Foto- & Barcode-Scanner, Optimal-Coach (17 Nährstoffe inkl. Folat + Wasser) mit Vorlesefunktion, Trends, Extra hoher Kontrast, JSON-Backup & Arzt-CSV-Export",
     "package_name": "com.nutricheck.app",
-    "version_name": "2.7.1",
+    "version_name": "2.7.2",
     "version_code": null,
-    "release_tag": "v2.7.1",
-    "direct_apk_url": "https://github.com/Lauju1909/NutriCheck-Android/releases/download/v2.7.1/NutriCheck-v2.7.1.apk",
-    "release_date": "2026-11-28T15:10:19Z",
+    "release_tag": "v2.7.2",
+    "direct_apk_url": "https://github.com/Lauju1909/NutriCheck-Android/releases/download/v2.7.2/NutriCheck-v2.7.2.apk",
+    "release_date": "2026-11-28T15:11:58Z",
     "icon": "https://raw.githubusercontent.com/Lauju1909/NutriCheck-Android/main/fastlane/metadata/android/de-DE/images/icon.png",
     "icon_url": "https://Lauju1909.github.io/fdroid-repo/icons/Lauju1909_NutriCheck-Android.png",
     "status": "approved",
@@ -330,9 +330,9 @@
     "payment_url": null,
     "is_beta": null,
     "hide_author": null,
-    "hideAuthor": false,
+    "paymentUrl": "",
     "isBeta": false,
     "paymentType": "free",
-    "paymentUrl": ""
+    "hideAuthor": false
   }
 ]
