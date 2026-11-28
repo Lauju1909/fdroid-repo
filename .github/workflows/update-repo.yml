@@ -5,7 +5,7 @@ on:
   push:
     branches: [ main ]
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: '0 * * * *'
   repository_dispatch:
     types: [ app-released ]
 
@@ -41,11 +41,10 @@ jobs:
           echo "ANDROID_HOME=/usr/local/lib/android/sdk" >> $GITHUB_ENV
           echo "Using Android Build Tools: $LATEST_BUILD_TOOLS"
 
-      - name: Install latest fdroidserver & OpenSSL dev
+      - name: Install fdroidserver (fast, minimal)
         run: |
-          sudo add-apt-repository -y ppa:fdroid/fdroidserver
-          sudo apt-get update
-          sudo apt-get install -y fdroidserver apksigner pkg-config libssl-dev
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends fdroidserver
 
       - name: Compile Rust Repository Builder
         run: cargo build --release

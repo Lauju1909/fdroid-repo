@@ -163,7 +163,10 @@ fn http_agent() -> ureq::Agent {
 }
 
 fn fetch_releases(repo_full_name: &str) -> Vec<GitHubRelease> {
-    let url = format!("https://api.github.com/repos/{}/releases", repo_full_name);
+    let url = format!(
+        "https://api.github.com/repos/{}/releases?per_page=5",
+        repo_full_name
+    );
     let agent = http_agent();
     let mut req = agent
         .get(&url)
@@ -248,49 +251,66 @@ fn download_file(api_url: &str, browser_url: &str, dest_path: &Path) -> bool {
     false
 }
 
-fn fetch_app_icon(repo_full_name: &str, dest_dir: &Path, safe_repo_prefix: &str) -> Option<String> {
-    let candidates = [
-        "www/icon-512.png",
-        "www/icon-192.png",
-        "assets/icon.png",
-        "icon.png",
-        "fastlane/metadata/android/en-US/images/icon.png",
-        "fastlane/metadata/android/de-DE/images/icon.png",
-        "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
-        "app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
-        "app/src/main/ic_launcher-playstore.png",
-    ];
-    let branches = ["main", "master"];
+fn fetch_app_icon(
+    repo_full_name: &str,
+    configured_icon: Option<&str>,
+    dest_dir: &Path,
+    safe_repo_prefix: &str,
+) -> Option<String> {
     let agent = http_agent();
+    let save_icon = |data: &[u8]| -> Option<String> {
+        if data.len() <= 100 {
+            return None;
+        }
+        let _ = fs::create_dir_all(dest_dir);
+        let icon_filename = format!("{}.png", safe_repo_prefix);
+        let icon_dest = dest_dir.join(&icon_filename);
+        if fs::write(&icon_dest, data).is_ok() {
+            return Some(format!("icons/{}", icon_filename));
+        }
+        None
+    };
 
-    for branch in &branches {
-        for rel_path in &candidates {
-            let raw_url = format!(
-                "https://raw.githubusercontent.com/{}/{}/{}",
-                repo_full_name, branch, rel_path
-            );
-            if let Ok(resp) = agent.get(&raw_url).call() {
+    // Fast path: use icon URL explicitly configured in apps.json (1 HTTP request instead of up to 18)
+    if let Some(url) = configured_icon {
+        let trimmed = url.trim();
+        if trimmed.starts_with("http://") || trimmed.starts_with("https://") {
+            if let Ok(resp) = agent.get(trimmed).call() {
                 if resp.status() == 200 {
                     let mut data = Vec::new();
-                    if resp.into_reader().read_to_end(&mut data).is_ok() && data.len() > 100 {
-                        let _ = fs::create_dir_all(dest_dir);
-                        let icon_filename = format!("{}.png", safe_repo_prefix);
-                        let icon_dest = dest_dir.join(&icon_filename);
-                        if fs::write(&icon_dest, &data).is_ok() {
-                            println!(
-                                "Fetched app icon for {} from {} ({} bytes)",
-                                repo_full_name,
-                                rel_path,
-                                data.len()
-                            );
-                            return Some(format!("icons/{}", icon_filename));
+                    if resp.into_reader().read_to_end(&mut data).is_ok() {
+                        if let Some(rel) = save_icon(&data) {
+                            return Some(rel);
                         }
                     }
                 }
             }
         }
     }
-    println!("No custom icon found for {}, using default.", repo_full_name);
+
+    let candidates = [
+        "fastlane/metadata/android/de-DE/images/icon.png",
+        "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+        "app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+        "www/icon-512.png",
+        "icon.png",
+    ];
+    for rel_path in &candidates {
+        let raw_url = format!(
+            "https://raw.githubusercontent.com/{}/main/{}",
+            repo_full_name, rel_path
+        );
+        if let Ok(resp) = agent.get(&raw_url).call() {
+            if resp.status() == 200 {
+                let mut data = Vec::new();
+                if resp.into_reader().read_to_end(&mut data).is_ok() {
+                    if let Some(rel) = save_icon(&data) {
+                        return Some(rel);
+                    }
+                }
+            }
+        }
+    }
     None
 }
 
@@ -746,7 +766,6 @@ fn build_repository(base_dir: &Path) {
     let metadata_dir = fdroid_dir.join("metadata");
 
     let apps_raw = fs::read_to_string(&apps_json_path).expect("Failed to read apps.json");
-    let mut latest_apks: HashMap<String, PathBuf> = HashMap::new();
     let mut apps_data: Vec<AppEntry> =
         serde_json::from_str(&apps_raw).expect("Failed to parse apps.json");
 
@@ -878,116 +897,121 @@ keydname: "CN=Lauju Barrierefreier App-Store, OU=Accessibility, O=Lauju1909, L=B
     let site_icons_dir = base_dir.join("_site").join("icons");
     let _ = fs::create_dir_all(&site_icons_dir);
 
-    for app in &mut apps_data {
-        let repo_full_name = app.repo.clone();
-        println!("Checking releases for {}...", repo_full_name);
-        let safe_repo_prefix = repo_full_name.replace('/', "_");
-
-        let pkg_id = app.id.clone().or_else(|| app.package_name.clone()).unwrap_or_else(|| safe_repo_prefix.clone());
-        app.id = Some(pkg_id.clone());
-        app.package_name = Some(pkg_id.clone());
-
-        if let Some(rel_icon_path) =
-            fetch_app_icon(&repo_full_name, &site_icons_dir, &safe_repo_prefix)
-        {
-            app.icon_url = Some(format!(
-                "https://{}.github.io/{}/{}",
-                github_owner, repo_name, rel_icon_path
-            ));
-        }
-
-        let releases = fetch_releases(&repo_full_name);
-        let mut downloaded_count = 0usize;
-        let mut seen_tags = HashSet::new();
-
-        for (rel_idx, rel) in releases.iter().enumerate() {
-            if downloaded_count >= 3 {
-                break;
-            }
-            let tag = if rel.tag_name.is_empty() {
-                format!("v1.0.{}", rel_idx)
-            } else {
-                rel.tag_name.clone()
-            };
-            if seen_tags.contains(&tag) {
-                continue;
-            }
-
-            let mut apk_assets: Vec<&GitHubAsset> = rel
-                .assets
-                .iter()
-                .filter(|a| a.name.to_lowercase().ends_with(".apk"))
-                .collect();
-
-            if apk_assets.is_empty() {
-                continue;
-            }
-
-            // Strictly filter out debug and unsigned APKs
-            let release_apks: Vec<&GitHubAsset> = apk_assets
-                .iter()
-                .copied()
-                .filter(|a| {
-                    let lower = a.name.to_lowercase();
-                    !lower.contains("debug") && !lower.contains("unsigned")
-                })
-                .collect();
-
-            if release_apks.is_empty() {
-                println!(
-                    "Skipping release {} for {} (only debug/unsigned APKs found)",
-                    tag, repo_full_name
-                );
-                continue;
-            }
-
-            apk_assets = release_apks;
-            apk_assets.sort_by_key(|a| {
-                let lower = a.name.to_lowercase();
-                if lower.starts_with("lauju_") || lower.contains("release") {
-                    0
-                } else {
-                    1
-                }
-            });
-
-            let best_asset = apk_assets[0];
-            let dl_url = &best_asset.browser_download_url;
-            let safe_tag = tag.replace('/', "_").replace(' ', "_");
-            let dest_filename = format!("{}_{}_{}", safe_repo_prefix, safe_tag, best_asset.name);
-            let dest_path = repo_dir.join(&dest_filename);
-
-            if downloaded_count == 0 {
-                app.release_tag = Some(tag.clone());
-                app.direct_apk_url = Some(dl_url.clone());
-                app.release_date = Some(rel.published_at.clone());
-                let clean_ver = tag.trim_start_matches('v').to_string();
-                app.version_name = Some(clean_ver);
-            }
-
-            if download_file(&best_asset.url, dl_url, &dest_path) {
-                if app_keystore_path.exists() {
-                    resign_apk_if_needed(
-                        &dest_path,
-                        &app_keystore_path,
-                        &app_keystore_pass,
-                        &app_key_alias,
-                    );
-                }
-
-                if !latest_apks.contains_key(&pkg_id) {
-                    latest_apks.insert(pkg_id.clone(), dest_path.clone());
-                }
-
-                downloaded_count += 1;
-                seen_tags.insert(tag);
+    // Clean stale APKs from repo_dir before parallel fetch so only the latest release per app is indexed
+    if let Ok(entries) = fs::read_dir(&repo_dir) {
+        for entry in entries.flatten() {
+            let p = entry.path();
+            if p.extension().and_then(|e| e.to_str()).map(|e| e.eq_ignore_ascii_case("apk")).unwrap_or(false) {
+                let _ = fs::remove_file(&p);
             }
         }
     }
 
+    // Fetch icons, download latest release APK, and sign all apps IN PARALLEL across CPU cores
+    let repo_dir_ref = &repo_dir;
+    let site_icons_dir_ref = &site_icons_dir;
+    let github_owner_ref = &github_owner;
+    let repo_name_ref = &repo_name;
+    let app_keystore_path_ref = &app_keystore_path;
+    let app_keystore_pass_ref = &app_keystore_pass;
+    let app_key_alias_ref = &app_key_alias;
+
+    std::thread::scope(|s| {
+        for app in &mut apps_data {
+            s.spawn(move || {
+                let repo_full_name = app.repo.clone();
+                println!("[parallel] Checking latest release for {}...", repo_full_name);
+                let safe_repo_prefix = repo_full_name.replace('/', "_");
+
+                let pkg_id = app
+                    .id
+                    .clone()
+                    .or_else(|| app.package_name.clone())
+                    .unwrap_or_else(|| safe_repo_prefix.clone());
+                app.id = Some(pkg_id.clone());
+                app.package_name = Some(pkg_id.clone());
+
+                if let Some(rel_icon_path) = fetch_app_icon(
+                    &repo_full_name,
+                    app.icon.as_deref(),
+                    site_icons_dir_ref,
+                    &safe_repo_prefix,
+                ) {
+                    app.icon_url = Some(format!(
+                        "https://{}.github.io/{}/{}",
+                        github_owner_ref, repo_name_ref, rel_icon_path
+                    ));
+                }
+
+                let releases = fetch_releases(&repo_full_name);
+                let mut seen_tags = HashSet::new();
+
+                for (rel_idx, rel) in releases.iter().enumerate() {
+                    let tag = if rel.tag_name.is_empty() {
+                        format!("v1.0.{}", rel_idx)
+                    } else {
+                        rel.tag_name.clone()
+                    };
+                    if seen_tags.contains(&tag) {
+                        continue;
+                    }
+
+                    let mut apk_assets: Vec<&GitHubAsset> = rel
+                        .assets
+                        .iter()
+                        .filter(|a| {
+                            let lower = a.name.to_lowercase();
+                            lower.ends_with(".apk")
+                                && !lower.contains("debug")
+                                && !lower.contains("unsigned")
+                        })
+                        .collect();
+
+                    if apk_assets.is_empty() {
+                        continue;
+                    }
+
+                    apk_assets.sort_by_key(|a| {
+                        let lower = a.name.to_lowercase();
+                        if lower.starts_with("lauju_") || lower.contains("release") {
+                            0
+                        } else {
+                            1
+                        }
+                    });
+
+                    let best_asset = apk_assets[0];
+                    let dl_url = &best_asset.browser_download_url;
+                    let safe_tag = tag.replace('/', "_").replace(' ', "_");
+                    let dest_filename =
+                        format!("{}_{}_{}", safe_repo_prefix, safe_tag, best_asset.name);
+                    let dest_path = repo_dir_ref.join(&dest_filename);
+
+                    app.release_tag = Some(tag.clone());
+                    app.direct_apk_url = Some(dl_url.clone());
+                    app.release_date = Some(rel.published_at.clone());
+                    app.version_name = Some(tag.trim_start_matches('v').to_string());
+
+                    if download_file(&best_asset.url, dl_url, &dest_path) {
+                        if app_keystore_path_ref.exists() {
+                            resign_apk_if_needed(
+                                &dest_path,
+                                app_keystore_path_ref,
+                                app_keystore_pass_ref,
+                                app_key_alias_ref,
+                            );
+                        }
+                        seen_tags.insert(tag);
+                        break; // Keep only the latest release APK per app for fast builds & lean gh-pages
+                    }
+                }
+            });
+        }
+    });
+
     println!("Running `fdroid update -c --create-metadata`...");
     let status = Command::new("fdroid")
-        .args(["update", "-c", "--create-metadata", "--verbose"])
+        .args(["update", "-c", "--create-metadata"])
         .current_dir(&fdroid_dir)
         .status();
 
@@ -1005,16 +1029,6 @@ keydname: "CN=Lauju Barrierefreier App-Store, OU=Accessibility, O=Lauju1909, L=B
     let json_extracted_path = repo_dir.join("index-v1.json");
     let _ = extract_index_json_from_jar(&jar_path, &json_extracted_path);
 
-    // AFTER fdroid update has successfully generated indices:
-    // Create standardized aliases for direct download URLs so both F-Droid index and direct links resolve
-    for (pkg_id, apk_src) in &latest_apks {
-        let standard_apk = repo_dir.join(format!("{}.apk", pkg_id));
-        let _ = fs::copy(apk_src, &standard_apk);
-        let latest_apk = repo_dir.join(format!("{}_latest.apk", pkg_id));
-        let _ = fs::copy(apk_src, &latest_apk);
-        println!("Created direct URL aliases for {}: {}.apk and {}_latest.apk", pkg_id, pkg_id, pkg_id);
-    }
-
     // Remove keystore before staging
     if app_keystore_path.exists() {
         let _ = fs::remove_file(&app_keystore_path);
@@ -1029,33 +1043,14 @@ keydname: "CN=Lauju Barrierefreier App-Store, OU=Accessibility, O=Lauju1909, L=B
     generate_landing_page(&apps_data, &repo_url, base_dir);
 
     let site_fdroid = site_dir.join("fdroid");
-    let site_repo = site_dir.join("repo");
     if site_fdroid.exists() {
         let _ = fs::remove_dir_all(&site_fdroid);
     }
-    if site_repo.exists() {
-        let _ = fs::remove_dir_all(&site_repo);
-    }
     let _ = fs::create_dir_all(&site_fdroid);
-    let _ = fs::create_dir_all(&site_repo);
 
+    // Publish only under _site/fdroid/repo/ (avoids 9x duplicate APK bloat in gh-pages)
     if repo_dir.exists() {
         let _ = copy_dir_recursive(&repo_dir, &site_fdroid.join("repo"));
-        let _ = copy_dir_recursive(&repo_dir, &site_repo);
-        // Also copy repository files directly to root _site so Neo Store / F-Droid resolve from root as well
-        if let Ok(entries) = fs::read_dir(&repo_dir) {
-            for entry in entries.flatten() {
-                let p = entry.path();
-                if p.is_file() {
-                    let fname = entry.file_name();
-                    let dst = site_dir.join(&fname);
-                    // Do not overwrite landing index.html
-                    if fname != "index.html" {
-                        let _ = fs::copy(&p, &dst);
-                    }
-                }
-            }
-        }
     }
     let icon_src = fdroid_dir.join("icon.png");
     if icon_src.exists() {
