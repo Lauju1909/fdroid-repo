@@ -27,11 +27,22 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Install Rust Toolchain
-        uses: dtolnay/rust-toolchain@stable
+      - name: Cache Rust Builder Binary
+        id: cache-builder
+        uses: actions/cache@v4
+        with:
+          path: target/release/rust-repo-builder
+          key: rust-builder-${{ runner.os }}-${{ hashFiles('Cargo.toml', 'Cargo.lock', 'src/main.rs') }}
 
-      - name: Rust Cargo Cache
-        uses: Swatinem/rust-cache@v2
+      - name: Cache Signed APKs & Icons
+        uses: actions/cache@v4
+        with:
+          path: |
+            fdroid/repo/*.apk
+            _site/icons
+          key: fdroid-apks-v1-${{ github.run_id }}
+          restore-keys: |
+            fdroid-apks-v1-
 
       - name: Setup Android SDK Build Tools
         run: |
@@ -39,14 +50,14 @@ jobs:
           echo "$LATEST_BUILD_TOOLS" >> $GITHUB_PATH
           echo "/usr/local/lib/android/sdk/platform-tools" >> $GITHUB_PATH
           echo "ANDROID_HOME=/usr/local/lib/android/sdk" >> $GITHUB_ENV
-          echo "Using Android Build Tools: $LATEST_BUILD_TOOLS"
 
       - name: Install fdroidserver (fast, minimal)
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends fdroidserver
 
-      - name: Compile Rust Repository Builder
+      - name: Compile Rust Repository Builder (only when changed)
+        if: steps.cache-builder.outputs.cache-hit != 'true'
         run: cargo build --release
 
       - name: Patch Androguard & Build F-Droid Repository in Rust
@@ -61,11 +72,11 @@ jobs:
           sudo ./target/release/rust-repo-builder patch
           ./target/release/rust-repo-builder build
 
-      - name: Deploy to GitHub Pages (gh-pages branch)
+      - name: Deploy to GitHub Pages (incremental delta push)
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./_site
           publish_branch: gh-pages
-          force_orphan: true
+          force_orphan: false
           commit_message: "chore(repo): deploy updated F-Droid repository via Rust builder"

@@ -257,14 +257,18 @@ fn fetch_app_icon(
     dest_dir: &Path,
     safe_repo_prefix: &str,
 ) -> Option<String> {
+    let icon_filename = format!("{}.png", safe_repo_prefix);
+    let icon_dest = dest_dir.join(&icon_filename);
+    if icon_dest.exists() && fs::metadata(&icon_dest).map(|m| m.len() > 100).unwrap_or(false) {
+        return Some(format!("icons/{}", icon_filename));
+    }
+
     let agent = http_agent();
     let save_icon = |data: &[u8]| -> Option<String> {
         if data.len() <= 100 {
             return None;
         }
         let _ = fs::create_dir_all(dest_dir);
-        let icon_filename = format!("{}.png", safe_repo_prefix);
-        let icon_dest = dest_dir.join(&icon_filename);
         if fs::write(&icon_dest, data).is_ok() {
             return Some(format!("icons/{}", icon_filename));
         }
@@ -897,17 +901,9 @@ keydname: "CN=Lauju Barrierefreier App-Store, OU=Accessibility, O=Lauju1909, L=B
     let site_icons_dir = base_dir.join("_site").join("icons");
     let _ = fs::create_dir_all(&site_icons_dir);
 
-    // Clean stale APKs from repo_dir before parallel fetch so only the latest release per app is indexed
-    if let Ok(entries) = fs::read_dir(&repo_dir) {
-        for entry in entries.flatten() {
-            let p = entry.path();
-            if p.extension().and_then(|e| e.to_str()).map(|e| e.eq_ignore_ascii_case("apk")).unwrap_or(false) {
-                let _ = fs::remove_file(&p);
-            }
-        }
-    }
-
-    // Fetch icons, download latest release APK, and sign all apps IN PARALLEL across CPU cores
+    // Track active latest APK filenames so cached APKs are reused and obsolete APKs are removed afterwards
+    let active_apks = std::sync::Mutex::new(HashSet::<String>::new());
+    let active_apks_ref = &active_apks;
     let repo_dir_ref = &repo_dir;
     let site_icons_dir_ref = &site_icons_dir;
     let github_owner_ref = &github_owner;
@@ -920,7 +916,6 @@ keydname: "CN=Lauju Barrierefreier App-Store, OU=Accessibility, O=Lauju1909, L=B
         for app in &mut apps_data {
             s.spawn(move || {
                 let repo_full_name = app.repo.clone();
-                println!("[parallel] Checking latest release for {}...", repo_full_name);
                 let safe_repo_prefix = repo_full_name.replace('/', "_");
 
                 let pkg_id = app
@@ -992,6 +987,18 @@ keydname: "CN=Lauju Barrierefreier App-Store, OU=Accessibility, O=Lauju1909, L=B
                     app.release_date = Some(rel.published_at.clone());
                     app.version_name = Some(tag.trim_start_matches('v').to_string());
 
+                    // Cache hit: reuse already downloaded & signed APK without re-downloading or re-signing
+                    let cached_ok = dest_path.exists()
+                        && fs::metadata(&dest_path).map(|m| m.len() > 1000).unwrap_or(false);
+                    if cached_ok {
+                        println!("[cache-hit] Reusing signed APK {}", dest_filename);
+                        if let Ok(mut set) = active_apks_ref.lock() {
+                            set.insert(dest_filename);
+                        }
+                        seen_tags.insert(tag);
+                        break;
+                    }
+
                     if download_file(&best_asset.url, dl_url, &dest_path) {
                         if app_keystore_path_ref.exists() {
                             resign_apk_if_needed(
@@ -1001,13 +1008,35 @@ keydname: "CN=Lauju Barrierefreier App-Store, OU=Accessibility, O=Lauju1909, L=B
                                 app_key_alias_ref,
                             );
                         }
+                        if let Ok(mut set) = active_apks_ref.lock() {
+                            set.insert(dest_filename);
+                        }
                         seen_tags.insert(tag);
-                        break; // Keep only the latest release APK per app for fast builds & lean gh-pages
+                        break;
                     }
                 }
             });
         }
     });
+
+    // Remove obsolete APKs from cache that are no longer the latest release
+    if let Ok(keep) = active_apks.lock() {
+        if let Ok(entries) = fs::read_dir(&repo_dir) {
+            for entry in entries.flatten() {
+                let p = entry.path();
+                if p.extension()
+                    .and_then(|e| e.to_str())
+                    .map(|e| e.eq_ignore_ascii_case("apk"))
+                    .unwrap_or(false)
+                {
+                    let fname = entry.file_name().to_string_lossy().to_string();
+                    if !keep.contains(&fname) {
+                        let _ = fs::remove_file(&p);
+                    }
+                }
+            }
+        }
+    }
 
     println!("Running `fdroid update -c --create-metadata`...");
     let status = Command::new("fdroid")
