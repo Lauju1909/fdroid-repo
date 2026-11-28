@@ -22,10 +22,10 @@
     "payment_url": null,
     "is_beta": null,
     "hide_author": null,
-    "isBeta": false,
+    "paymentUrl": "https://ko-fi.com/lauju1909",
     "hideAuthor": false,
-    "paymentType": "free",
-    "paymentUrl": "https://ko-fi.com/lauju1909"
+    "isBeta": false,
+    "paymentType": "free"
   },
   {
     "id": "de.lauri.audiostudiotycoon",
@@ -50,10 +50,10 @@
     "payment_url": null,
     "is_beta": null,
     "hide_author": null,
+    "hideAuthor": false,
     "paymentType": "free",
-    "isBeta": true,
     "paymentUrl": "",
-    "hideAuthor": false
+    "isBeta": true
   },
   {
     "id": "de.lauri.minigames",
@@ -78,10 +78,10 @@
     "payment_url": null,
     "is_beta": null,
     "hide_author": null,
-    "hideAuthor": false,
     "paymentUrl": "",
-    "isBeta": true,
-    "paymentType": "free"
+    "paymentType": "free",
+    "hideAuthor": false,
+    "isBeta": true
   },
   {
     "id": "de.lauri.vokabelstar",
@@ -106,10 +106,10 @@
     "payment_url": null,
     "is_beta": null,
     "hide_author": null,
-    "hideAuthor": false,
-    "isBeta": true,
     "paymentUrl": "",
-    "paymentType": "free"
+    "paymentType": "free",
+    "isBeta": true,
+    "hideAuthor": false
   },
   {
     "id": "de.lauri.bfwenglisch",
@@ -134,10 +134,10 @@
     "payment_url": null,
     "is_beta": null,
     "hide_author": null,
-    "paymentType": "free",
+    "isBeta": true,
     "paymentUrl": "",
     "hideAuthor": false,
-    "isBeta": true
+    "paymentType": "free"
   },
   {
     "id": "de.lauri.lernplatform",
@@ -162,10 +162,10 @@
     "payment_url": null,
     "is_beta": null,
     "hide_author": null,
-    "paymentUrl": "",
-    "hideAuthor": false,
     "paymentType": "free",
-    "isBeta": false
+    "isBeta": false,
+    "hideAuthor": false,
+    "paymentUrl": ""
   },
   {
     "id": "de.lwl.stundenplan",
@@ -190,10 +190,10 @@
     "payment_url": null,
     "is_beta": null,
     "hide_author": null,
-    "paymentType": "free",
-    "paymentUrl": "",
+    "isBeta": false,
     "hideAuthor": false,
-    "isBeta": false
+    "paymentUrl": "",
+    "paymentType": "free"
   },
   {
     "id": "de.lauri.dokumentenbetrachter",
@@ -218,10 +218,10 @@
     "payment_url": null,
     "is_beta": null,
     "hide_author": null,
-    "paymentUrl": "",
-    "isBeta": true,
     "paymentType": "free",
-    "hideAuthor": false
+    "hideAuthor": false,
+    "isBeta": true,
+    "paymentUrl": ""
   },
   {
     "id": "de.lauri.schrittzaehler",
@@ -246,10 +246,10 @@
     "payment_url": null,
     "is_beta": null,
     "hide_author": null,
+    "paymentType": "free",
     "hideAuthor": false,
     "isBeta": false,
-    "paymentUrl": "",
-    "paymentType": "free"
+    "paymentUrl": ""
   },
   {
     "id": "de.lwl.speiseplan",
@@ -275,8 +275,8 @@
     "is_beta": null,
     "hide_author": null,
     "paymentType": "free",
-    "hideAuthor": false,
     "isBeta": false,
+    "hideAuthor": false,
     "paymentUrl": ""
   },
   {
@@ -302,10 +302,10 @@
     "payment_url": null,
     "is_beta": null,
     "hide_author": null,
-    "paymentType": "free",
-    "hideAuthor": false,
     "isBeta": false,
-    "paymentUrl": ""
+    "paymentUrl": "",
+    "hideAuthor": false,
+    "paymentType": "free"
   },
   {
     "id": "com.nutricheck.app",
