@@ -1,6 +1,6 @@
 Name: NutriCheck – Ernährung Barrierefrei
 AutoName: NutriCheck
-Summary: Kostenlose, barrierefreie Ernährungs-App mit Zutaten-Prüfung, Ballaststoff- & Optimal-Check
+Summary: Kostenlose, barrierefreie Ernährungs-App mit 240+ Zutaten, Rezepten, Coach & Vorlesefunktion
 Categories:
   - Sports & Health
   - Science & Education
@@ -12,13 +12,16 @@ Description: |-
   NutriCheck ist eine 100 % kostenlose, lokale und TalkBack-barrierefreie
   Ernährungs-App für Android. Sie trackt Frühstück, Mittagessen, Abendbrot,
   Snacks und Wasser – und berechnet Kalorien, Ballaststoffe, Makros, Vitamine
-  und Mineralstoffe strikt aus den tatsächlichen Zutaten.
+  (inkl. Folat) und Mineralstoffe strikt aus den tatsächlichen Zutaten.
 
-  Features:
-  - Zutaten-basiertes Tracking statt pauschaler Gerichtsnamen (kein Schönrechnen durch Umbenennen wie Nudelsuppe zu Nudeleintopf)
-  - Einfacher 1-Tipp-Zutaten-Assistent mit gezielten Rückfragen (z. B. Vollkorn- vs. Weizennudeln, Gemüse, Brühe, Portionsgröße)
-  - Kostenlose On-Device Foto-Erkennung (Google ML Kit, offline) plus optionaler kostenloser Gemini Free-Tier-Modus
-  - Kostenloser Barcode-Scanner via Open Food Facts (inkl. barrierefreier manueller EAN-Eingabe)
-  - Automatischer Optimal-Check für 16 Nährstoffe + Wasser mit Ampel-Bewertung und Tipps
-  - Tages-, Wochen- und Monatsansicht mit TalkBack-Diagramm-Zusammenfassung und Kalender
-  - 100 % lokal auf dem Gerät gespeichert (kein Konto, inkl. JSON-Backup)
+  Features (ab v2.0.0):
+  - Einfache Sprache & Spracheingabe (Mikrofon): Essen einfach sagen oder in Alltagssprache schreiben – die App erkennt Zutaten, Mengen & Tageszeit automatisch und fragt bei Unklarheiten kurz nach (auch vorlesbar)
+  - Über 240 deutsche Offline-Grundzutaten mit realistischen, vollständigen Nährwerten
+  - 1-Tipp-Zutaten-Assistent für 14 typische Alltagsgerichte (Suppen, Eintöpfe, Pasta, Pfannengerichte, Aufläufe, Pizza/Flammkuchen, Wraps/Döner, Porridge, Brotzeit, Salat u. v. m.)
+  - Eigene Rezepte & Lieblingsmahlzeiten (1-Tipp-Portionen: ½, 1, 1½, 2 Portionen) sowie „Letzte Mahlzeit kopieren“
+  - Echter Anti-Austricks- & Plausibilitäts-Schutz (Umbenennen ändert keine Nährwerte, Warnung bei extremen Mengen & Doppeleinträgen, Ehrlichkeit- & Genauigkeits-Anzeige)
+  - Kostenlose On-Device Foto-Erkennung (Google ML Kit mit Deutsch-Mapping) plus optionaler kostenloser Gemini Free-Tier-Modus mit strukturierten 1-Tipp-Rückfragen
+  - Kostenloser Barcode-Scanner (Open Food Facts) mit Signalton, Vibration, sofortiger TalkBack-Ansage und Ergänzung fehlender Ballaststoffe
+  - Smarter Optimal-Coach (17 Nährstoffe + Wasser) mit automatischen Lebensmittel-Vorschlägen, deutscher Sprachausgabe („Tagesstatus vorlesen“), Wochen-/Monats-Trends, Muster-Erkennung und Nährstoff-Filterung
+  - Maximale Barrierefreiheit: TalkBack, 48dp-Tippflächen, 200 %-Schriftgröße, Extra hoher Kontrast und Einfache Sprache / Kurze Ansagen
+  - 100 % lokal auf dem Gerät gespeichert (kein Konto) inkl. JSON-Backup (Export & Import) und CSV-Export für Arzt oder Ernährungsberatung
