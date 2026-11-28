@@ -570,6 +570,13 @@ fn generate_landing_page(apps_data: &[AppEntry], repo_url: &str, base_dir: &Path
             color: var(--muted);
             font-size: 0.95rem;
         }}
+        .guide-list {{
+            padding-left: 1.4rem;
+            margin: 0.75rem 0 0 0;
+        }}
+        .guide-list li {{
+            margin-bottom: 0.85rem;
+        }}
         .app-grid {{
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
@@ -609,34 +616,48 @@ fn generate_landing_page(apps_data: &[AppEntry], repo_url: &str, base_dir: &Path
     </header>
 
     <main role="main">
-        <section class="step-box" aria-labelledby="neostore-heading">
-            <h2 id="neostore-heading">1️⃣ Neo Store herunterladen (falls noch nicht installiert)</h2>
-            <p><strong>Neo Store</strong> ist ein moderner, kostenloser und barrierefreier Open-Source-App-Store für Android. Da alternative App-Stores nicht im Google Play Store angeboten werden dürfen, lädst du Neo Store direkt über die offiziellen Quellen herunter:</p>
+        <section class="step-box" aria-labelledby="store-download-heading">
+            <h2 id="store-download-heading">1️⃣ F-Droid oder Neo Store herunterladen (einmalig)</h2>
+            <p>Um meine Apps bequem zu installieren und automatisch Updates zu erhalten, brauchst du <strong>F-Droid</strong> oder <strong>Neo Store</strong>. Beide sind kostenlose Open-Source-App-Stores und werden deshalb nicht im Google Play Store angeboten – hier bekommst du die sicheren Original-Downloads:</p>
             <div>
-                <a class="btn btn-primary" href="https://github.com/NeoApplications/Neo-Store/releases/latest" target="_blank" rel="noopener" aria-label="Neo Store direkt als offizielle APK auf GitHub herunterladen">
-                    📥 Neo Store herunterladen (Offizielle APK / GitHub)
+                <a class="btn btn-primary" href="https://f-droid.org/F-Droid.apk" aria-label="F-Droid direkt als offizielle APK herunterladen">
+                    📥 F-Droid direkt herunterladen (APK)
                 </a>
-                <a class="btn btn-secondary" href="https://f-droid.org/de/packages/com.machiav3lli.fdroid/" target="_blank" rel="noopener" aria-label="Neo Store auf F-Droid öffnen">
-                    🏪 Neo Store auf F-Droid
+                <a class="btn btn-secondary" href="https://f-droid.org/de/" target="_blank" rel="noopener" aria-label="Offizielle deutsche F-Droid Webseite öffnen">
+                    🌐 F-Droid Webseite
+                </a>
+                <a class="btn btn-secondary" href="https://github.com/NeoApplications/Neo-Store/releases/latest" target="_blank" rel="noopener" aria-label="Neo Store direkt als offizielle APK auf GitHub herunterladen">
+                    📥 Neo Store herunterladen (GitHub APK)
                 </a>
             </div>
         </section>
 
         <section class="repo-box" aria-labelledby="repo-heading">
-            <h2 id="repo-heading">2️⃣ Mit 1 Klick in Neo Store hinzufügen</h2>
-            <p>Tippe auf dem Smartphone einfach auf den folgenden Button – <strong>Neo Store</strong> (oder F-Droid) öffnet sich automatisch mit der fertigen Paketquelle und dem Sicherheits-Fingerprint:</p>
+            <h2 id="repo-heading">2️⃣ Mit 1 Klick in F-Droid oder Neo Store hinzufügen</h2>
+            <p>Sobald <strong>F-Droid</strong> oder <strong>Neo Store</strong> installiert ist, tippe einfach auf dem Smartphone auf diesen Knopf – meine Paketquelle wird inklusive Sicherheits-Fingerprint sofort eingetragen:</p>
             <div>
-                <a class="btn btn-success" href="{one_click_url}" aria-label="Paketquelle mit einem Klick direkt in Neo Store oder F-Droid eintragen">
-                    ⚡ Mit 1 Klick in Neo Store hinzufügen
+                <a class="btn btn-success" href="{one_click_url}" aria-label="Paketquelle mit einem Klick direkt in F-Droid oder Neo Store eintragen">
+                    ⚡ Mit 1 Klick in F-Droid / Neo Store hinzufügen
                 </a>
                 <button class="btn btn-secondary" type="button" onclick="copyRepoUrl()" aria-label="Paketquellen-Adresse inklusive Fingerprint in die Zwischenablage kopieren">
                     📋 URL kopieren (für manuelles Einfügen)
                 </button>
             </div>
             <p class="copy-status" id="copyStatus" role="status" aria-live="polite"></p>
-            <p class="hint">Falls du die Quelle manuell eintragen möchtest (<em>Neo Store → Einstellungen → Paketquellen → +</em>):</p>
+            <p class="hint">Adresse für manuelles Einfügen (<em>Einstellungen → Paketquellen → +</em>):</p>
             <code class="repo-url" id="repoUrlText">{repo_url}</code>
             <p class="hint">Sicherheits-Fingerprint (wird beim 1-Klick-Link automatisch übernommen): <code>{fingerprint}</code></p>
+        </section>
+
+        <section class="step-box" aria-labelledby="guide-heading">
+            <h2 id="guide-heading">📖 Schritt-für-Schritt-Anleitung (auch für TalkBack)</h2>
+            <ol class="guide-list">
+                <li><strong>App-Store herunterladen:</strong> Tippe unter Schritt 1 auf <em>„F-Droid direkt herunterladen (APK)“</em> (oder auf <em>„Neo Store herunterladen“</em>, falls du Neo Store bevorzugst).</li>
+                <li><strong>App-Store installieren:</strong> Öffne die heruntergeladene Datei in deinen Benachrichtigungen oder im Ordner <em>Downloads</em>. Wenn Android fragt, erlaube einmalig <em>„Aus dieser Quelle installieren“</em> und tippe anschließend auf <em>„Installieren“</em>.</li>
+                <li><strong>Paketquelle mit 1 Klick eintragen:</strong> Kehre zu dieser Webseite zurück und tippe unter Schritt 2 auf <strong>„⚡ Mit 1 Klick in F-Droid / Neo Store hinzufügen“</strong>. Wähle F-Droid oder Neo Store aus und bestätige mit <em>„Hinzufügen“</em> bzw. <em>„OK“</em>.</li>
+                <li><strong>Apps nutzen &amp; aktuell halten:</strong> Warte kurz, bis die App-Liste geladen ist. Danach findest du alle meine barrierefreien Apps direkt in der Suche und unter <em>Kategorien</em> und erhältst neue Updates automatisch.</li>
+                <li><strong>Falls der 1-Klick-Link im Browser nicht öffnet:</strong> Tippe auf <em>„URL kopieren“</em>, öffne F-Droid oder Neo Store, gehe auf <em>Einstellungen → Paketquellen → + (Neue Quelle)</em>, füge die kopierte Adresse ein und speichere.</li>
+            </ol>
         </section>
 
         <section aria-labelledby="apps-heading">

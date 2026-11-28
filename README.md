@@ -4,16 +4,21 @@ Offizielles F-Droid Repository für alle barrierefreien Android-Apps von **Lauju
 
 ---
 
-## 📲 Zu Neo Store / F-Droid auf dem Smartphone hinzufügen
+## 📲 Zu F-Droid oder Neo Store auf dem Smartphone hinzufügen
 
-### 1. Neo Store herunterladen (falls noch nicht installiert)
-Neo Store ist nicht im Google Play Store verfügbar, sondern wird kostenlos über die offiziellen Open-Source-Quellen geladen:
-- 📥 **[Neo Store APK herunterladen (GitHub Releases)](https://github.com/NeoApplications/Neo-Store/releases/latest)**
-- 🏪 **[Neo Store auf F-Droid](https://f-droid.org/de/packages/com.machiav3lli.fdroid/)**
+### 1. F-Droid oder Neo Store herunterladen (einmalig)
+Weder F-Droid noch Neo Store gibt es im Google Play Store (Google erlaubt dort keine alternativen App-Stores). Lade die kostenlose Original-App direkt über die offiziellen Links herunter:
+- 📥 **[F-Droid direkt herunterladen (Offizielle APK)](https://f-droid.org/F-Droid.apk)** (Webseite: https://f-droid.org/de/)
+- 📥 **[Neo Store herunterladen (Offizielle APK / GitHub)](https://github.com/NeoApplications/Neo-Store/releases/latest)**
 
 ### 2. 1-Klick-Installation (auf dem Smartphone öffnen)
-Tippe auf folgenden Link, um das Repository mit nur einem Klick direkt in **Neo Store** oder **F-Droid** einzubinden:
-👉 **[Mit 1 Klick in Neo Store / F-Droid hinzufügen](fdroidrepos://lauju1909.github.io/fdroid-repo/fdroid/repo?fingerprint=6CB811B89526A24CE7D41FB3FB4045B9FD0541D2017F96127CA4C407D43FCF0F)**
+Tippe auf folgenden Link, um das Repository mit nur einem Klick direkt in **F-Droid** oder **Neo Store** einzubinden:
+👉 **[Mit 1 Klick in F-Droid / Neo Store hinzufügen](fdroidrepos://lauju1909.github.io/fdroid-repo/fdroid/repo?fingerprint=6CB811B89526A24CE7D41FB3FB4045B9FD0541D2017F96127CA4C407D43FCF0F)**
+
+### 3. Kurze Schritt-für-Schritt-Anleitung
+1. Lade **F-Droid** (oder **Neo Store**) über den Link oben herunter und installiere die APK (bei Nachfrage einmalig *„Aus dieser Quelle installieren“* erlauben).
+2. Tippe anschließend auf den **1-Klick-Link** oben und bestätige mit **Hinzufügen** / **OK**.
+3. Nach kurzer Synchronisation stehen alle barrierefreien Apps inklusive automatischer Updates direkt bereit!
 
 ---
 
