@@ -13,7 +13,7 @@ Description: |-
 
   Funktionen:
   - Optimiert für Screenreader (Google TalkBack)
-  - Schüttel-Geste: Handy kurz schütteln liest den aktuellen Stand laut vor
+  - Schüttel-Geste: Handy kurz schütteln liest den aktuellen Stand laut vor (in den Einstellungen an- und ausschaltbar)
   - Ausführliche Statistiken für Tag (Stundenverlauf), Woche, Monat und Jahr
   - Aktive Gehzeit, Distanz in Kilometern und verbrannte Kalorien
   - Akkusparender Android-Hintergrunddienst (zählt auch bei ausgeschaltetem Display)
@@ -55,7 +55,17 @@ Builds:
     gradle:
       - assembleRelease
 
+  - versionName: '1.0.3'
+    versionCode: 3
+    commit: v1.0.3
+    subdir: android
+    init:
+      - npm ci
+      - npx cap sync android
+    gradle:
+      - assembleRelease
+
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-CurrentVersion: '1.0.2'
-CurrentVersionCode: 2
+CurrentVersion: '1.0.3'
+CurrentVersionCode: 3
