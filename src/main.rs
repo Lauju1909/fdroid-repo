@@ -12,6 +12,7 @@ use walkdir::WalkDir;
 
 const GITHUB_USER_DEFAULT: &str = "Lauju1909";
 const REPO_NAME_DEFAULT: &str = "fdroid-repo";
+const REPO_FINGERPRINT: &str = "6CB811B89526A24CE7D41FB3FB4045B9FD0541D2017F96127CA4C407D43FCF0F";
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct AppEntry {
@@ -450,13 +451,22 @@ fn generate_landing_page(apps_data: &[AppEntry], repo_url: &str, base_dir: &Path
         ));
     }
 
+    let repo_url_no_scheme = repo_url
+        .trim_start_matches("https://")
+        .trim_start_matches("http://");
+    let one_click_url = format!(
+        "fdroidrepos://{}?fingerprint={}",
+        repo_url_no_scheme, REPO_FINGERPRINT
+    );
+    let full_copy_url = format!("{}?fingerprint={}", repo_url, REPO_FINGERPRINT);
+
     let html = format!(
         r#"<!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barrierefreier F-Droid App-Store &amp; Repository (Powered by Rust)</title>
+    <title>Barrierefreier F-Droid &amp; Neo Store App-Katalog</title>
     <style>
         :root {{
             --bg: #0f172a;
@@ -465,6 +475,7 @@ fn generate_landing_page(apps_data: &[AppEntry], repo_url: &str, base_dir: &Path
             --muted: #cbd5e1;
             --accent: #38bdf8;
             --accent-dark: #0284c7;
+            --success: #4ade80;
             --border: #334155;
             --focus: #facc15;
         }}
@@ -492,7 +503,14 @@ fn generate_landing_page(apps_data: &[AppEntry], repo_url: &str, base_dir: &Path
             border: 2px solid var(--accent);
             border-radius: 12px;
             padding: 1.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.75rem;
+        }}
+        .step-box {{
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.75rem;
         }}
         .repo-url {{
             display: block;
@@ -501,7 +519,7 @@ fn generate_landing_page(apps_data: &[AppEntry], repo_url: &str, base_dir: &Path
             color: var(--accent);
             border: 1px solid var(--border);
             padding: 0.85rem;
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-family: monospace;
             border-radius: 8px;
             margin: 0.75rem 0;
@@ -509,15 +527,15 @@ fn generate_landing_page(apps_data: &[AppEntry], repo_url: &str, base_dir: &Path
         }}
         .btn {{
             display: inline-block;
-            padding: 0.75rem 1.25rem;
+            padding: 0.85rem 1.35rem;
             border-radius: 8px;
             font-weight: 700;
             text-decoration: none;
             cursor: pointer;
             border: 2px solid transparent;
-            font-size: 1rem;
-            margin-right: 0.5rem;
-            margin-top: 0.5rem;
+            font-size: 1.05rem;
+            margin-right: 0.6rem;
+            margin-top: 0.6rem;
         }}
         .btn:focus-visible, a:focus-visible, button:focus-visible {{
             outline: 3px solid var(--focus);
@@ -530,10 +548,27 @@ fn generate_landing_page(apps_data: &[AppEntry], repo_url: &str, base_dir: &Path
         .btn-primary:hover {{
             background: #7dd3fc;
         }}
+        .btn-success {{
+            background: var(--success);
+            color: #020617;
+        }}
+        .btn-success:hover {{
+            background: #86efac;
+        }}
         .btn-secondary {{
             background: transparent;
             color: var(--text);
             border-color: var(--border);
+        }}
+        .copy-status {{
+            margin-top: 0.75rem;
+            color: var(--success);
+            font-weight: 600;
+            min-height: 1.5rem;
+        }}
+        .hint {{
+            color: var(--muted);
+            font-size: 0.95rem;
         }}
         .app-grid {{
             display: grid;
@@ -569,23 +604,39 @@ fn generate_landing_page(apps_data: &[AppEntry], repo_url: &str, base_dir: &Path
 </head>
 <body>
     <header role="banner">
-        <h1>♿ Barrierefreies F-Droid Repository</h1>
-        <p>Offizieller Katalog für barrierefreie Apps (TalkBack-optimiert). Füge diese Paketquelle in <strong>F-Droid</strong>, <strong>Droid-ify</strong>, <strong>Neo Store</strong> oder direkt in unserer <strong>Barrierefreien App-Store App</strong> hinzu.</p>
+        <h1>♿ Barrierefreies F-Droid &amp; Neo Store Repository</h1>
+        <p>Offizieller Katalog für barrierefreie Android-Apps (TalkBack-optimiert). Installiere zuerst <strong>Neo Store</strong> (oder <strong>F-Droid</strong>) und füge dann unten mit nur <strong>einem Klick</strong> diese Paketquelle hinzu.</p>
     </header>
 
     <main role="main">
-        <section class="repo-box" aria-labelledby="repo-heading">
-            <h2 id="repo-heading">🔗 F-Droid Paketquellen-Adresse (Repository URL)</h2>
-            <p>Kopiere diesen Link in F-Droid unter <em>Einstellungen → Paketquellen → Neue Paketquelle hinzufügen</em>:</p>
-            <code class="repo-url" id="repoUrlText">{repo_url}</code>
+        <section class="step-box" aria-labelledby="neostore-heading">
+            <h2 id="neostore-heading">1️⃣ Neo Store herunterladen (falls noch nicht installiert)</h2>
+            <p><strong>Neo Store</strong> ist ein moderner, kostenloser und barrierefreier Open-Source-App-Store für Android. Da alternative App-Stores nicht im Google Play Store angeboten werden dürfen, lädst du Neo Store direkt über die offiziellen Quellen herunter:</p>
             <div>
-                <button class="btn btn-primary" onclick="navigator.clipboard.writeText('{repo_url}').then(() => alert('Paketquellen-URL wurde in die Zwischenablage kopiert!'))">
-                    📋 URL kopieren
-                </button>
-                <a class="btn btn-secondary" href="fdroidrepos://{repo_url}">
-                    📲 Direkt in F-Droid öffnen
+                <a class="btn btn-primary" href="https://github.com/NeoApplications/Neo-Store/releases/latest" target="_blank" rel="noopener" aria-label="Neo Store direkt als offizielle APK auf GitHub herunterladen">
+                    📥 Neo Store herunterladen (Offizielle APK / GitHub)
+                </a>
+                <a class="btn btn-secondary" href="https://f-droid.org/de/packages/com.machiav3lli.fdroid/" target="_blank" rel="noopener" aria-label="Neo Store auf F-Droid öffnen">
+                    🏪 Neo Store auf F-Droid
                 </a>
             </div>
+        </section>
+
+        <section class="repo-box" aria-labelledby="repo-heading">
+            <h2 id="repo-heading">2️⃣ Mit 1 Klick in Neo Store hinzufügen</h2>
+            <p>Tippe auf dem Smartphone einfach auf den folgenden Button – <strong>Neo Store</strong> (oder F-Droid) öffnet sich automatisch mit der fertigen Paketquelle und dem Sicherheits-Fingerprint:</p>
+            <div>
+                <a class="btn btn-success" href="{one_click_url}" aria-label="Paketquelle mit einem Klick direkt in Neo Store oder F-Droid eintragen">
+                    ⚡ Mit 1 Klick in Neo Store hinzufügen
+                </a>
+                <button class="btn btn-secondary" type="button" onclick="copyRepoUrl()" aria-label="Paketquellen-Adresse inklusive Fingerprint in die Zwischenablage kopieren">
+                    📋 URL kopieren (für manuelles Einfügen)
+                </button>
+            </div>
+            <p class="copy-status" id="copyStatus" role="status" aria-live="polite"></p>
+            <p class="hint">Falls du die Quelle manuell eintragen möchtest (<em>Neo Store → Einstellungen → Paketquellen → +</em>):</p>
+            <code class="repo-url" id="repoUrlText">{repo_url}</code>
+            <p class="hint">Sicherheits-Fingerprint (wird beim 1-Klick-Link automatisch übernommen): <code>{fingerprint}</code></p>
         </section>
 
         <section aria-labelledby="apps-heading">
@@ -599,10 +650,25 @@ fn generate_landing_page(apps_data: &[AppEntry], repo_url: &str, base_dir: &Path
     <footer role="contentinfo">
         <p>Automatisch aktualisiert via Rust &amp; GitHub Actions • Barrierefrei gestaltet für Screenreader (TalkBack / NVDA).</p>
     </footer>
+
+    <script>
+        function copyRepoUrl() {{
+            const url = "{full_copy_url}";
+            const status = document.getElementById("copyStatus");
+            navigator.clipboard.writeText(url).then(function() {{
+                status.textContent = "✅ Paketquellen-URL inkl. Fingerprint wurde in die Zwischenablage kopiert!";
+            }}).catch(function() {{
+                status.textContent = "Bitte kopiere die Adresse manuell aus dem Textfeld unten.";
+            }});
+        }}
+    </script>
 </body>
 </html>
 "#,
         repo_url = repo_url,
+        one_click_url = one_click_url,
+        full_copy_url = full_copy_url,
+        fingerprint = REPO_FINGERPRINT,
         app_count = apps_data.len(),
         app_cards_html = app_cards_html
     );
