@@ -22,9 +22,9 @@
     "payment_url": null,
     "is_beta": null,
     "hide_author": null,
-    "paymentUrl": "https://ko-fi.com/lauju1909",
     "isBeta": false,
     "paymentType": "free",
+    "paymentUrl": "https://ko-fi.com/lauju1909",
     "hideAuthor": false
   },
   {
@@ -51,9 +51,9 @@
     "is_beta": null,
     "hide_author": null,
     "paymentUrl": "",
-    "paymentType": "free",
     "hideAuthor": false,
-    "isBeta": true
+    "isBeta": true,
+    "paymentType": "free"
   },
   {
     "id": "de.lauri.minigames",
@@ -78,10 +78,10 @@
     "payment_url": null,
     "is_beta": null,
     "hide_author": null,
-    "paymentType": "free",
     "paymentUrl": "",
+    "isBeta": true,
     "hideAuthor": false,
-    "isBeta": true
+    "paymentType": "free"
   },
   {
     "id": "de.lauri.vokabelstar",
@@ -107,9 +107,9 @@
     "is_beta": null,
     "hide_author": null,
     "isBeta": true,
-    "paymentUrl": "",
+    "paymentType": "free",
     "hideAuthor": false,
-    "paymentType": "free"
+    "paymentUrl": ""
   },
   {
     "id": "de.lauri.bfwenglisch",
@@ -134,8 +134,8 @@
     "payment_url": null,
     "is_beta": null,
     "hide_author": null,
-    "isBeta": true,
     "paymentType": "free",
+    "isBeta": true,
     "paymentUrl": "",
     "hideAuthor": false
   },
@@ -162,9 +162,9 @@
     "payment_url": null,
     "is_beta": null,
     "hide_author": null,
-    "paymentType": "free",
     "paymentUrl": "",
     "isBeta": false,
+    "paymentType": "free",
     "hideAuthor": false
   },
   {
@@ -190,9 +190,9 @@
     "payment_url": null,
     "is_beta": null,
     "hide_author": null,
+    "paymentUrl": "",
     "isBeta": false,
     "hideAuthor": false,
-    "paymentUrl": "",
     "paymentType": "free"
   },
   {
@@ -218,10 +218,10 @@
     "payment_url": null,
     "is_beta": null,
     "hide_author": null,
-    "isBeta": true,
-    "paymentType": "free",
+    "hideAuthor": false,
     "paymentUrl": "",
-    "hideAuthor": false
+    "isBeta": true,
+    "paymentType": "free"
   },
   {
     "id": "de.lauri.schrittzaehler",
@@ -247,9 +247,9 @@
     "is_beta": null,
     "hide_author": null,
     "isBeta": false,
-    "paymentUrl": "",
     "paymentType": "free",
-    "hideAuthor": false
+    "hideAuthor": false,
+    "paymentUrl": ""
   },
   {
     "id": "de.lwl.speiseplan",
@@ -274,9 +274,9 @@
     "payment_url": null,
     "is_beta": null,
     "hide_author": null,
+    "paymentType": "free",
     "paymentUrl": "",
     "hideAuthor": false,
-    "paymentType": "free",
     "isBeta": false
   },
   {
@@ -302,10 +302,10 @@
     "payment_url": null,
     "is_beta": null,
     "hide_author": null,
-    "paymentType": "free",
+    "hideAuthor": false,
     "paymentUrl": "",
     "isBeta": false,
-    "hideAuthor": false
+    "paymentType": "free"
   },
   {
     "id": "com.nutricheck.app",
@@ -317,11 +317,11 @@
     "description": "",
     "desc": "100 % kostenlose, TalkBack-barrierefreie Ernährungs-App (v2.0): Essen einfach per Spracheingabe oder in einfacher Sprache erfassen (automatische Erkennung + Rückfragen), über 240 deutsche Offline-Grundzutaten, eigene Rezepte, Anti-Austricks-Schutz, Foto- & Barcode-Scanner, Optimal-Coach (17 Nährstoffe inkl. Folat + Wasser) mit Vorlesefunktion, Trends, Extra hoher Kontrast, JSON-Backup & Arzt-CSV-Export",
     "package_name": "com.nutricheck.app",
-    "version_name": "2.8.0",
+    "version_name": "2.9.0",
     "version_code": null,
-    "release_tag": "v2.8.0",
-    "direct_apk_url": "https://github.com/Lauju1909/NutriCheck-Android/releases/download/v2.8.0/NutriCheck-v2.8.0.apk",
-    "release_date": "2026-11-28T15:18:43Z",
+    "release_tag": "v2.9.0",
+    "direct_apk_url": "https://github.com/Lauju1909/NutriCheck-Android/releases/download/v2.9.0/NutriCheck-v2.9.0.apk",
+    "release_date": "2026-11-28T16:48:42Z",
     "icon": "https://raw.githubusercontent.com/Lauju1909/NutriCheck-Android/main/fastlane/metadata/android/de-DE/images/icon.png",
     "icon_url": "https://Lauju1909.github.io/fdroid-repo/icons/Lauju1909_NutriCheck-Android.png",
     "status": "approved",
@@ -331,8 +331,8 @@
     "is_beta": null,
     "hide_author": null,
     "paymentType": "free",
-    "isBeta": false,
     "hideAuthor": false,
+    "isBeta": false,
     "paymentUrl": ""
   }
 ]
